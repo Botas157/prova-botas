@@ -1063,6 +1063,7 @@
                 method: "POST",
                 headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
                 body: JSON.stringify({
+                    _captcha: "false",
                     _subject: `📝 Resultado: ${studentName}Nota: ${score}`,
                     Nome: studentName,
                     Email: studentEmail,
