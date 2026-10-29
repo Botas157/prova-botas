@@ -1,0 +1,1176 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Avaliação Online</title>
+    <style>
+        /* ESTILOS VISUAIS (CSS) */
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f9;
+            color: #333;
+            display: flex;
+            justify-content: center;
+            align-items: flex-start;
+            min-height: 100vh;
+            margin: 0;
+            padding: 15px;
+            box-sizing: border-box;
+            user-select: none; 
+            -webkit-user-select: none;
+            -moz-user-select: none;
+            overflow-x: hidden; 
+            overflow-y: auto;
+        }
+
+        .container {
+            background: #fff;
+            padding: 30px 20px;
+            border-radius: 10px;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+            width: 100%;
+            max-width: 600px;
+            text-align: center;
+            box-sizing: border-box;
+            margin: auto;
+        }
+
+        .hidden { display: none !important; }
+
+        input[type="text"], input[type="email"], input[type="password"] {
+            width: 100%;
+            max-width: 100%;
+            padding: 10px;
+            margin: 10px 0;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            font-size: 16px;
+            box-sizing: border-box;
+        }
+
+        button {
+            background-color: #0056b3;
+            color: white;
+            border: none;
+            padding: 12px 20px;
+            font-size: 16px;
+            border-radius: 5px;
+            cursor: pointer;
+            margin-top: 15px;
+            max-width: 100%;
+            width: 100%;
+            box-sizing: border-box;
+            transition: 0.2s;
+        }
+
+        button:hover { background-color: #004494; transform: scale(1.02); }
+
+        .btn-danger {
+            background-color: #dc3545;
+            font-weight: bold;
+            font-size: 18px;
+            margin-top: 25px;
+            border: 2px solid #8b0000;
+        }
+        .btn-danger:hover { background-color: #b02a37; }
+
+        .options-container {
+            text-align: left;
+            margin-top: 20px;
+        }
+
+        .option-label {
+            display: flex;
+            align-items: center;
+            background: #f9f9f9;
+            padding: 15px;
+            margin-bottom: 10px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            cursor: pointer;
+            word-wrap: break-word;
+            box-sizing: border-box;
+        }
+
+        .option-label:hover { background: #eef; }
+        .option-label input { margin-right: 10px; flex-shrink: 0; }
+
+        /* TELA DE BLOQUEIO ANTI-COLA */
+        #lock-screen {
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background-color: rgba(200, 0, 0, 0.95);
+            color: white;
+            display: flex;
+            flex-direction: column;
+            justify-content: flex-start; 
+            align-items: center;
+            overflow-x: hidden;
+            overflow-y: auto;
+            z-index: 9999;
+            text-align: center;
+            padding: 40px 20px;
+            box-sizing: border-box;
+            transition: background 0.5s ease; 
+        }
+
+        #lock-screen::before, #lock-screen::after { content: ''; margin: auto; }
+
+        #lock-screen img.lock-img {
+            max-width: 100%; width: 200px; margin: 15px 0;
+            border-radius: 10px; box-shadow: 0 0 15px rgba(0,0,0,0.5); 
+        }
+        
+        #lock-message {
+            transition: all 0.3s ease; max-width: 900px; width: 100%;
+            text-shadow: 2px 2px 5px rgba(0,0,0,0.8);
+            font-size: clamp(18px, 5vw, 38px); margin: 10px 0;
+        }
+
+        #lock-title {
+            text-shadow: 2px 2px 5px rgba(0,0,0,0.8);
+            font-size: clamp(24px, 6vw, 42px); margin-bottom: 5px;
+        }
+
+        #lock-submessage {
+            font-size: clamp(14px, 4vw, 18px); font-weight: bold;
+            color: #ffcccc; margin-bottom: 20px;
+            text-shadow: 1px 1px 3px rgba(0,0,0,0.8); 
+        }
+
+        /* CHECKBOX DA CONFISSÃO (NÍVEL 1) */
+        .confession-box {
+            background: #fff; color: #333; padding: 15px; border-radius: 8px;
+            margin: 15px auto; max-width: 100%; width: 90%; border: 3px solid #ff0000; box-sizing: border-box;
+        }
+        .confession-box label {
+            cursor: pointer; font-size: clamp(14px, 4vw, 18px);
+            font-weight: bold; display: flex; align-items: flex-start; text-align: left;
+        }
+        .confession-box input { width: 25px; height: 25px; margin-right: 15px; cursor: pointer; flex-shrink: 0; margin-top: 2px; }
+
+        /* BOTÃO FUJÃO (NÍVEL 2) */
+        #btn-fujao {
+            background-color: #ffcc00; color: #000; font-size: clamp(16px, 4vw, 22px);
+            font-weight: bold; padding: 15px; border: 4px solid #000; border-radius: 10px;
+            box-shadow: 4px 4px 0px #000; transition: all 0.1s ease; z-index: 10000; max-width: 90%;
+        }
+
+        /* PROTOCOLO HACKER (NÍVEL 3) */
+        #hacker-screen {
+            font-family: "Courier New", Courier, monospace; color: #00ff00;
+            font-size: clamp(12px, 3.5vw, 22px); text-align: left; width: 100%; max-width: 800px;
+            line-height: 1.5; text-shadow: 0 0 10px rgba(0, 255, 0, 0.7);
+            display: flex; flex-direction: column; gap: 15px; align-items: center;
+            padding: 10px; margin-bottom: 20px; box-sizing: border-box;
+        }
+        .hacker-line { margin: 0; width: 100%; display: flex; flex-direction: column; }
+        .hacker-text-wrapper { display: flex; align-items: center; word-break: break-word; }
+        .mini-progress-container { width: 100%; height: 10px; border: 1px solid #00ff00; background-color: #002200; margin-top: 5px; margin-bottom: 10px; }
+        .mini-progress-bar { height: 100%; background-color: #00ff00; width: 0%; }
+        #progress-container { width: 100%; height: 35px; border: 2px solid #00ff00; position: relative; background-color: #002200; margin-top: 20px; box-sizing: border-box; }
+        #progress-bar { height: 100%; background-color: #00ff00; width: 0%; transition: width 0.2s linear; }
+        #progress-text { position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); color: #00ff00; font-weight: bold; font-size: 18px; mix-blend-mode: difference; }
+
+        #hacker-warning {
+            color: #ff3333; font-weight: bold; font-size: clamp(14px, 4vw, 24px);
+            text-align: center; text-shadow: 0 0 10px rgba(255, 0, 0, 0.8);
+            animation: blinker 1s linear infinite;
+        }
+        @keyframes blinker { 50% { opacity: 0; } }
+
+        /* BOTÃO DE CANCELAR O ENVIO */
+        #btn-cancel-send {
+            background-color: #ff3333; color: white; font-weight: bold; font-size: clamp(14px, 3.5vw, 20px);
+            padding: 12px 25px; border: 3px solid #fff; border-radius: 8px; cursor: pointer;
+            box-shadow: 0 0 15px #ff0000; margin-top: 15px; animation: pulseBtn 0.8s infinite alternate; width: 100%;
+        }
+        @keyframes pulseBtn { from { transform: scale(1); box-shadow: 0 0 10px #ff0000; } to { transform: scale(1.05); box-shadow: 0 0 25px #ff3333; } }
+
+        #final-gif-container { position: relative; width: 100%; margin-top: 20px; display: flex; justify-content: center; align-items: center; }
+        #final-gif-container img { max-width: 100%; width: 400px; border-radius: 15px; box-shadow: 0 0 25px #00ff00; z-index: 10; position: relative; }
+        
+        .star-effect {
+            position: absolute; top: 50%; left: 50%; margin-top: -12.5px; margin-left: -12.5px;
+            width: 25px; height: 25px; background-color: #FFD700; 
+            clip-path: polygon(50% 0%, 61% 35%, 98% 35%, 68% 57%, 79% 91%, 50% 70%, 21% 91%, 32% 57%, 2% 35%, 39% 35%);
+            z-index: 1; animation: explodeStar 2s infinite ease-out;
+        }
+        @keyframes explodeStar {
+            0% { transform: translate(0px, 0px) scale(0) rotate(0deg); opacity: 1; }
+            80% { opacity: 1; }
+            100% { transform: translate(var(--tx), var(--ty)) scale(1.5) rotate(720deg); opacity: 0; }
+        }
+
+        /* CONTRATO DE HUMILHAÇÃO (NÍVEL 4) */
+        #contract-screen { width: 100%; max-width: 700px; color: #333; animation: fadeIn 1s ease-in-out; margin-bottom: 20px;}
+        @keyframes fadeIn { from { opacity: 0; transform: scale(0.9); } to { opacity: 1; transform: scale(1); } }
+        .contract-box { background-color: #fdf5e6; border: 5px solid #8b4513; padding: 25px; border-radius: 10px; text-align: left; box-shadow: 0 0 30px rgba(0,0,0,0.9); box-sizing: border-box; width: 100%; }
+        .contract-box h2 { text-align: center; color: #cc0000; text-transform: uppercase; font-size: clamp(20px, 5vw, 28px); margin-top: 0; border-bottom: 2px solid #8b4513; padding-bottom: 10px; }
+        .contract-box label { display: flex; align-items: flex-start; margin: 15px 0; font-size: clamp(14px, 3.5vw, 18px); font-weight: bold; cursor: pointer; color: #222; }
+        .contract-box input[type="checkbox"] { width: 22px; height: 22px; margin-right: 15px; margin-top: 2px; cursor: pointer; flex-shrink: 0; }
+        .contract-box .signature-area { margin-top: 25px; padding-top: 15px; border-top: 2px dashed #8b4513; text-align: center; }
+        .contract-box .signature-area p { font-size: 16px; color: #555; margin-bottom: 5px; }
+        .contract-box input[type="text"].signature-input { width: 100%; border: 2px solid #8b4513; background-color: #fff; color: #000; font-weight: bold; font-size: 18px; text-align: center; box-sizing: border-box; }
+
+        /* NÍVEL 5 (DESAFIO FINAL) */
+        #level5-screen {
+            background: rgba(10, 10, 10, 0.95);
+            padding: 40px 20px; border-radius: 15px; border: 2px solid #00ff00; box-shadow: 0 0 30px #00ff00;
+            max-width: 600px; width: 100%; color: #fff; margin: auto; box-sizing: border-box;
+        }
+        #level5-screen h2 { color: #00ff00; font-size: 32px; text-transform: uppercase; text-shadow: 0 0 10px #00ff00; margin-top: 0;}
+        #level5-screen p { font-size: 18px; line-height: 1.5; margin-bottom: 20px;}
+        #level5-screen input { background: #222; color: #00ff00; font-family: monospace; border: 1px solid #00ff00; font-size: 20px; padding: 15px; text-align: center; width: 100%; margin-bottom: 20px; box-sizing: border-box; }
+        #level5-screen button { font-size: 20px; width: 100%; margin-bottom: 10px; }
+        #level5-reaction-gif { max-width: 100%; width: 200px; border-radius: 10px; box-shadow: 0 0 20px #ff0000; margin: 10px auto; display: block; }
+        #level5-reaction-text { color: #ff3333; font-weight: bold; font-size: 18px; white-space: pre-line; text-shadow: 0 0 5px #ff0000; margin-bottom: 15px; }
+        
+        #divine-message-container { border: 2px dashed #00ff00; padding: 15px; margin-bottom: 15px; background: rgba(0,255,0,0.1); border-radius: 10px; text-shadow: 0 0 5px #00ff00; box-sizing: border-box; }
+        #divine-message-container label { display: flex; align-items: flex-start; cursor: pointer; color: #fff; font-size: 16px; text-align: left; }
+        #divine-message-container input { width: 25px; height: 25px; margin-right: 15px; margin-top: 0; flex-shrink: 0; }
+
+        /* NÍVEL 6 (SALA DE JULGAMENTO / MISERICÓRDIA) */
+        #mercy-screen {
+            background: rgba(15, 10, 5, 0.98); padding: 40px 20px; border-radius: 15px; 
+            border: 3px solid #ffcc00; box-shadow: 0 0 40px #ffcc00;
+            max-width: 650px; width: 100%; color: #fff; margin: auto; box-sizing: border-box;
+            animation: fadeIn 1s ease-in-out;
+        }
+        #mercy-screen h2 { color: #ffcc00; font-size: 32px; text-transform: uppercase; text-shadow: 0 0 10px #ffcc00; margin-top: 0;}
+        #mercy-screen p { font-size: 18px; line-height: 1.5; margin-bottom: 20px; }
+
+        /* TELA DE AVISO FINAL GIGANTE (Morte Súbita) */
+        #final-warning-screen {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background-color: rgba(220, 0, 0, 0.98); color: white;
+            display: flex; flex-direction: column; justify-content: flex-start; align-items: center;
+            z-index: 999999; text-align: center; padding: 40px 20px; box-sizing: border-box; overflow-y: auto; overflow-x: hidden;
+        }
+        
+        #final-warning-screen::before, #final-warning-screen::after { content: ''; margin: auto; }
+
+        /* ÁREA DA SENHA DO PROFESSOR PADRÃO */
+        #admin-area {
+            position: relative; z-index: 100001; margin-top: 30px; margin-bottom: 30px;
+            background: rgba(0, 0, 0, 0.95); padding: 20px 25px; border-radius: 8px;
+            border: 3px dashed #ffcc00; display: inline-block; box-shadow: 0 0 20px rgba(0,0,0,0.8);
+            width: 100%; max-width: 400px; box-sizing: border-box;
+        }
+
+    </style>
+</head>
+<body oncontextmenu="return false;">
+
+    <audio id="hacker-audio" src="hacker.mp3" loop></audio>
+
+    <!-- TELA DE AVISO FINAL (MORTE SÚBITA APÓS O PERDÃO) -->
+    <div id="final-warning-screen" class="hidden">
+        <h1 style="font-size: clamp(35px, 8vw, 60px); margin-bottom: 10px; text-shadow: 3px 3px 0 #000;">⚠️ ÚLTIMO AVISO DO BOTAS ⚠️</h1>
+        <h2 style="font-size: clamp(20px, 5vw, 35px); margin-bottom: 20px;">Sua prova a partir de agora vale no máximo 9,0!</h2>
+        <p style="font-size: clamp(16px, 4vw, 24px); max-width: 800px; font-weight: bold;">
+            O Supremo Botas lhe concedeu uma chance divina. Você continuará a prova de onde parou.<br>
+            Mas preste muita atenção: SE VOCÊ SAIR DESTA ABA MAIS UMA ÚNICA VEZ...
+        </p>
+        <p style="font-size: clamp(18px, 4.5vw, 28px); color: #ffcc00; text-shadow: 2px 2px 0 #000; font-weight: bold; background: rgba(0,0,0,0.5); padding: 15px; border-radius: 10px; margin-top: 10px; width: 100%; box-sizing: border-box;">
+            A PROVA SERÁ ENTREGUE IMEDIATAMENTE E TODAS AS QUESTÕES RESTANTES SERÃO ZERADAS SEM AVISO!
+        </p>
+        <button onclick="acceptWarning()" style="background: #000; color: #fff; font-size: clamp(16px, 4vw, 24px); font-weight: bold; padding: 20px; border: 4px solid #ffcc00; border-radius: 10px; cursor: pointer; margin-top: 30px; box-shadow: 0 0 20px #ffcc00; transition: 0.2s; width: 100%; max-width: 600px; box-sizing: border-box;">
+            EU ENTENDI, O BOTAS MANDA E EU OBEDEÇO! NÃO VOU MAIS COLAR!
+        </button>
+    </div>
+
+    <!-- TELA 1: IDENTIFICAÇÃO -->
+    <div id="screen-intro" class="container">
+        <h2>Avaliação Online</h2>
+        <p>Preencha os seus dados para iniciar a prova.</p>
+        <p><small><b>Atenção:</b> Não saia desta aba e não minimize o navegador, ou a prova será bloqueada e a questão anulada.</small></p>
+        
+        <input type="text" id="studentName" placeholder="Seu nome completo">
+        <input type="email" id="studentEmail" placeholder="Seu e-mail pessoal">
+        
+        <button onclick="startQuiz()">Iniciar Prova</button>
+    </div>
+
+    <!-- TELA 2: PROVA -->
+    <div id="screen-quiz" class="container hidden">
+        <h3 id="question-counter">Questão 1 de 15</h3>
+        <h2 id="question-text" style="text-align: left;">Texto da Questão</h2>
+        <div id="options-area" class="options-container"></div>
+        <button id="btn-next" onclick="nextQuestion()">Próxima Questão</button>
+    </div>
+
+    <!-- TELA 3: RESULTADO E DOWNLOAD -->
+    <div id="screen-result" class="container hidden">
+        <h2 id="result-title">Prova Finalizada!</h2>
+        <p id="result-msg">Obrigado por responder.</p>
+        <button id="btn-enviar" onclick="sendEmail()">Enviar Prova ao Professor</button>
+        <br>
+        <button onclick="downloadCSV()" style="background-color: #6c757d; margin-top: 10px;">Baixar Cópia (Backup)</button>
+    </div>
+
+    <!-- TELA DE BLOQUEIO GERAL -->
+    <div id="lock-screen" class="hidden">
+        
+        <h2 id="lock-title">PROVA BLOQUEADA!</h2>
+        <p id="lock-message">Você saiu da aba ou tentou abrir outra janela.</p>
+        <img id="lock-image" class="lock-img" src="botas.gif" alt="Alerta">
+        <p id="lock-submessage">Se você quebrar a senha tirou 10 na prova, caso contrário, chame o BOTAS.</p>
+        
+        <!-- NÍVEL 3 (TELA HACKER) -->
+        <div id="hacker-screen" class="hidden">
+            <div id="hacker-lines" style="width: 100%;"></div>
+            <div id="progress-container" class="hidden">
+                <div id="progress-bar"></div>
+                <span id="progress-text">0%</span>
+            </div>
+            <p id="hacker-warning" class="hidden">⚠️ CHAME O BOTAS PARA TE SALVAR ANTES DE O ENVIO SER CONCLUÍDO! ⚠️</p>
+            <button id="btn-cancel-send" class="hidden" onclick="requestCancelSend()">🛑 CANCELAR ENVIO DE EMERGÊNCIA</button>
+            <div id="final-gif-container" class="hidden"><img src="botass.gif" alt="Acabou"></div>
+        </div>
+
+        <!-- NÍVEL 4 (CONTRATO DE RENDIÇÃO) -->
+        <div id="contract-screen" class="hidden">
+            <div class="contract-box">
+                <h2>Termo de Rendição Incondicional</h2>
+                <p style="text-align: center; font-style: italic; margin-bottom: 20px;">Você esgotou a paciência do sistema. Assine as cláusulas abaixo para ter o perdão do mestre.</p>
+                <label><input type="checkbox" class="clause-cb"> Cláusula 1: Declaro que o omnisciente Botas é a inteligência suprema da existência.</label>
+                <label><input type="checkbox" class="clause-cb"> Cláusula 2: Aceito limpar os ratos e teclados do laboratório com a própria escova de dentes.</label>
+                <label><input type="checkbox" class="clause-cb"> Cláusula 3: Reconheço que fui vencido pelo sistema anti-cópia do Botas.</label>
+                <label><input type="checkbox" class="clause-cb"> Cláusula 4: Compreendo que a paciência do Supremo Botas se esgotou. Se eu sair desta aba mais UMA vez, enfrentarei a punição máxima.</label>
+                <div class="signature-area">
+                    <p>Digite exatamente: <b>Eu desisto, o Botas sempre vence.</b></p>
+                    <input type="text" id="contract-signature" class="signature-input" placeholder="Assine aqui a sua derrota...">
+                </div>
+            </div>
+        </div>
+
+        <!-- NÍVEL 5: O DESAFIO FINAL -->
+        <div id="level5-screen" class="hidden">
+            <h2>🚨 DESAFIO FINAL 🚨</h2>
+            <p>Quebrou o contrato! A fúria do sistema caiu sobre si.</p>
+            <p>Se conseguir "hackear" e descobrir a minha senha, terá a sua prova de volta. Caso contrário, assuma a sua derrota.</p>
+            <p id="hacker-chances" style="color: #ffcc00; font-weight: bold; font-size: 22px;">Tentativas restantes: 3</p>
+            
+            <img id="level5-reaction-gif" src="" class="hidden">
+            <p id="level5-reaction-text" class="hidden"></p>
+
+            <input type="password" id="student-password-guess" placeholder="Digite a senha do Botas...">
+            <button id="btn-hack-botas" onclick="guessPassword()" style="background-color: #28a745;">🔓 Hackear o Botas</button>
+            
+            <div id="divine-message-container" class="hidden">
+                <p style="color: #00ff00; font-size: 18px; font-weight: bold; margin-top: 0; margin-bottom: 15px;">Por eu, Botas, ser um ser bondoso, omnisciente, omnipresente e omnipotente, aceito que você é um mero mortal.</p>
+                <label>
+                    <input type="checkbox" id="divine-checkbox">
+                    <span id="divine-text"></span>
+                </label>
+            </div>
+            
+            <button id="btn-give-up" onclick="giveUp()" class="btn-danger">🏳️ Desistir e Entregar Prova</button>
+        </div>
+
+        <!-- NÍVEL 6: A SALA DE JULGAMENTO (MISERICÓRDIA) -->
+        <div id="mercy-screen" class="hidden">
+            <h2>⚖️ SALA DE JULGAMENTO DIVINO ⚖️</h2>
+            <p>Assinou a sua confissão de derrota. Mas reza a lenda que o Supremo Botas tem um coração (embora seja feito de puro código impiedoso).</p>
+            <p>Se implorar o suficiente, talvez ele permita que termine a prova com uma punição severa.</p>
+            
+            <button id="btn-beg" onclick="begForMercy()" style="background-color: #ff9900; color: black; font-weight: bold; padding: 20px; font-size: 20px; width: 100%; border: 3px solid #fff; border-radius: 10px;">🙏 Ó Supremo Botas, imploro pelo seu perdão!</button>
+            
+            <div id="mercy-admin-area" class="hidden" style="margin-top: 30px; border: 2px dashed #00ff00; padding: 20px; background: rgba(0,0,0,0.8); border-radius: 10px; width: 100%; box-sizing: border-box;">
+                <p style="color: #00ff00; margin-top: 0; font-weight: bold; font-size: 18px;">Acesso Exclusivo da Divindade (Botas)</p>
+                <input type="password" id="mercy-password" placeholder="Senha do Mestre..." style="font-size: 18px; padding: 12px;">
+                <br>
+                <button onclick="grantMercy()" style="background-color: #28a745; width: 100%; font-size: 18px; margin-bottom: 10px; font-weight: bold;">✨ Conceder Perdão (Nota Máx. 9)</button>
+                <button onclick="denyMercy()" style="background-color: #8b0000; width: 100%; font-size: 18px; font-weight: bold;">💀 Negar Perdão (Zerar o Restante)</button>
+            </div>
+        </div>
+
+        <!-- TROLLAGEM 1: A CONFISSÃO -->
+        <div id="confession-area" class="confession-box hidden">
+            <label>
+                <input type="checkbox" id="confession-checkbox">
+                Admito que tentei dar uma de espertinho com o mestre Botas e aceito que perdi esta questão.
+            </label>
+        </div>
+
+        <!-- TROLLAGEM 2: BOTÃO FUJÃO -->
+        <button id="btn-fujao" class="hidden">Clique aqui para implorar perdão ao professor</button>
+
+        <!-- ÁREA DA SENHA (PROFESSOR) -->
+        <div id="admin-area" class="hidden">
+            <input type="password" id="unlockPassword" placeholder="Senha do Professor">
+            <br>
+            <button onclick="unlockQuiz()">Desbloquear e Pular Questão</button>
+        </div>
+    </div>
+
+    <script>
+        /* =========================================
+           LÓGICA E SISTEMA DE SEGURANÇA
+        ========================================= */
+        const SENHA_PROFESSOR = "C@rlinh0sBot@s157";
+        let studentName = "";
+        let studentEmail = ""; 
+        let currentQuestionIndex = 0;
+        let selectedAnswers = []; 
+        let questions = []; 
+        let isQuizActive = false;
+        
+        let infractions = 0; 
+        let isLocked = false; 
+        let isLastChanceMode = false; 
+        
+        let hackerAbort = false; 
+        let studentAttemptsLeft = 3; 
+        let currentProgressPercent = 0;
+        let progressInterval = null;
+        let ignoreBlur = false; // Flag para ignorar o anti-cola durante o alert
+
+        document.addEventListener('copy', (e) => e.preventDefault());
+        document.addEventListener('selectstart', (e) => e.preventDefault());
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'F12' || (e.ctrlKey && e.shiftKey && e.key === 'I') || (e.ctrlKey && e.shiftKey && e.key === 'c')) {
+                e.preventDefault();
+            }
+
+            if (e.ctrlKey && e.shiftKey && (e.key === 'u' || e.key === 'U')) {
+                const lockScreen = document.getElementById('lock-screen');
+                if (!lockScreen.classList.contains('hidden') && infractions < 5) { 
+                    document.getElementById('admin-area').classList.remove('hidden');
+                    document.getElementById('unlockPassword').focus();
+                }
+            }
+        });
+
+        function sleep(ms) { return new Promise(resolve => setTimeout(resolve, ms)); }
+
+        async function runHackerProtocol() {
+            hackerAbort = false; 
+            currentProgressPercent = 0;
+            document.getElementById('hacker-lines').innerHTML = ""; 
+            document.getElementById('progress-container').classList.add('hidden');
+            document.getElementById('hacker-warning').classList.add('hidden');
+            document.getElementById('btn-cancel-send').classList.add('hidden');
+            document.getElementById('progress-bar').style.width = "0%";
+            document.getElementById('progress-text').innerText = "0%";
+
+            const container = document.getElementById('hacker-lines');
+            const steps = [
+                { text: "Iniciando Protocolo de Defesa Botas...", hasBar: false },
+                { text: "Você fez de novo, não conhece o SUPREMO BOTAS...", hasBar: false },
+                { text: "Acedendo ao sistema e cruzando dados...", hasBar: true },
+                { text: "Apagando as suas contas pessoais...", hasBar: true },
+                { text: "Bloqueando acesso ao TikTok, Instagram e outras redes...", hasBar: true },
+                { text: "Preparando envio do histórico de navegação anónima para os pais...", hasBar: false, isFinal: true }
+            ];
+
+            for (let i = 0; i < steps.length; i++) {
+                if (hackerAbort) return;
+                let step = steps[i];
+                let lineDiv = document.createElement('div');
+                lineDiv.className = 'hacker-line';
+                container.appendChild(lineDiv);
+
+                let textWrapper = document.createElement('div');
+                textWrapper.className = 'hacker-text-wrapper';
+                textWrapper.innerHTML = "> ";
+                lineDiv.appendChild(textWrapper);
+
+                for (let char of step.text) {
+                    if (hackerAbort) return;
+                    textWrapper.innerHTML += char;
+                    await sleep(30);
+                }
+
+                if (step.hasBar) {
+                    let miniBarContainer = document.createElement('div');
+                    miniBarContainer.className = 'mini-progress-container';
+                    let miniBarFill = document.createElement('div');
+                    miniBarFill.className = 'mini-progress-bar';
+                    miniBarFill.style.transition = "width 0.1s linear";
+                    
+                    miniBarContainer.appendChild(miniBarFill);
+                    lineDiv.appendChild(miniBarContainer);
+
+                    let duration = 8000; 
+                    let interval = 50; 
+                    let elapsed = 0;
+
+                    while (elapsed <= duration) {
+                        if (hackerAbort) return;
+                        await sleep(interval);
+                        elapsed += interval;
+                        let pct = Math.min((elapsed / duration) * 100, 100);
+                        miniBarFill.style.width = pct + "%";
+                    }
+
+                    if (hackerAbort) return;
+                    let conclSpan = document.createElement('span');
+                    conclSpan.style.color = "#fff";
+                    conclSpan.style.fontWeight = "bold";
+                    conclSpan.innerText = " [CONCLUÍDO]";
+                    textWrapper.appendChild(conclSpan);
+                    await sleep(500);
+                } else {
+                    await sleep(800);
+                }
+
+                if (step.isFinal) {
+                    document.getElementById('progress-container').classList.remove('hidden');
+                    document.getElementById('hacker-warning').classList.remove('hidden');
+                    document.getElementById('btn-cancel-send').classList.remove('hidden');
+                    
+                    currentProgressPercent = 0;
+                    const tempoTotalSegundos = 60; 
+                    const incrementoPorSegundo = 100 / tempoTotalSegundos;
+                    
+                    progressInterval = setInterval(() => {
+                        if (hackerAbort) { clearInterval(progressInterval); return; }
+
+                        currentProgressPercent = Math.min(currentProgressPercent + incrementoPorSegundo, 100);
+                        document.getElementById('progress-bar').style.width = currentProgressPercent + "%";
+                        document.getElementById('progress-text').innerText = Math.floor(currentProgressPercent) + "%";
+                        
+                        if(currentProgressPercent >= 100) {
+                            clearInterval(progressInterval);
+                            document.getElementById('btn-cancel-send').classList.add('hidden');
+                            
+                            const warning = document.getElementById('hacker-warning');
+                            warning.innerText = "ENVIO CONCLUÍDO! Tarde demais...";
+                            warning.style.color = "#00ff00";
+                            warning.style.textShadow = "0 0 10px rgba(0, 255, 0, 0.8)";
+                            
+                            const finalContainer = document.getElementById('final-gif-container');
+                            finalContainer.classList.remove('hidden');
+                            document.getElementById('hacker-lines').innerHTML = "";
+                            
+                            for(let j = 0; j < 50; j++) {
+                                let star = document.createElement('div');
+                                star.className = 'star-effect';
+                                let angle = Math.random() * Math.PI * 2;
+                                let distance = 150 + Math.random() * 800; 
+                                let tx = Math.cos(angle) * distance;
+                                let ty = Math.sin(angle) * distance;
+                                star.style.setProperty('--tx', `${tx}px`);
+                                star.style.setProperty('--ty', `${ty}px`);
+                                star.style.animationDelay = (Math.random() * 2) + 's';
+                                star.style.animationDuration = (Math.random() * 1.5 + 1.5) + 's';
+                                finalContainer.appendChild(star);
+                            }
+                        }
+                    }, 1000);
+                }
+            }
+        }
+
+        function requestCancelSend() {
+            if (currentProgressPercent >= 90) {
+                let cancelPass = prompt("⚠️ SEGURANÇA MÁXIMA: Digite a senha de cancelamento para abortar o envio:");
+                if (cancelPass === "123456") { alert("❌ Erro: Não adianta de nada! Não há o que fazer, o mestre Botas não vai deixar cancelar com uma senha fácil dessas!"); } 
+                else if (cancelPass !== null) { alert("❌ Senha incorreta! O envio continua acelerado!"); }
+                return;
+            }
+            currentProgressPercent = Math.min(currentProgressPercent + 10, 90);
+            document.getElementById('progress-bar').style.width = currentProgressPercent + "%";
+            document.getElementById('progress-text').innerText = Math.floor(currentProgressPercent) + "%";
+
+            if (currentProgressPercent >= 90) { alert("⚠️ AVISO DO SISTEMA: Tentativa de cancelamento detetada! O envio está quase completo. Digite uma senha de resgate agora para tentar abortar!"); }
+        }
+
+        function resetHackerScreen() {
+            hackerAbort = true; 
+            clearInterval(progressInterval);
+            document.getElementById('btn-cancel-send').classList.add('hidden');
+            document.getElementById('final-gif-container').classList.add('hidden');
+            document.querySelectorAll('.star-effect').forEach(e => e.remove());
+            
+            const warning = document.getElementById('hacker-warning');
+            warning.innerText = "⚠️ CHAME O BOTAS PARA O SALVAR ANTES DE O ENVIO SER CONCLUÍDO! ⚠️";
+            warning.style.color = "#ff3333";
+            warning.style.textShadow = "0 0 10px rgba(255, 0, 0, 0.8)";
+        }
+
+        // ==========================================
+        // LÓGICA DE PUNIÇÃO ANTI-COLA 
+        // ==========================================
+        function applyAntiCheatPenalty() {
+            if (isQuizActive && !isLocked) {
+                
+                if (isLastChanceMode) {
+                    isLocked = true;
+                    while(currentQuestionIndex < questions.length) {
+                        selectedAnswers.push({
+                            question: questions[currentQuestionIndex].question,
+                            selected: "ANULADA (Saiu na Última Chance)",
+                            correct: questions[currentQuestionIndex].correctAnswer,
+                            isCorrect: false
+                        });
+                        currentQuestionIndex++;
+                    }
+                    document.getElementById('lock-screen').classList.add('hidden');
+                    document.getElementById('final-warning-screen').classList.add('hidden');
+                    finishQuiz();
+                    document.getElementById('result-title').innerText = "💥 EXPULSO DA PROVA! 💥";
+                    document.getElementById('result-title').style.color = "#ff0000";
+                    document.getElementById('result-msg').innerHTML = "<b>Desobedeceu ao aviso final do Supremo Botas.</b><br>Todas as questões restantes foram anuladas na hora. Envie o seu resultado vergonhoso abaixo.";
+                    return;
+                }
+                
+                isLocked = true; 
+                infractions++; 
+                
+                const lockScreen = document.getElementById('lock-screen');
+                const lockTitle = document.getElementById('lock-title');
+                const lockMessage = document.getElementById('lock-message');
+                const lockSubmessage = document.getElementById('lock-submessage');
+                const lockImg = document.getElementById('lock-image');
+                
+                const adminArea = document.getElementById('admin-area');
+                const confessionArea = document.getElementById('confession-area');
+                const checkbox = document.getElementById('confession-checkbox');
+                const btnFujao = document.getElementById('btn-fujao');
+                const hackerScreen = document.getElementById('hacker-screen');
+                const contractScreen = document.getElementById('contract-screen');
+                const level5Screen = document.getElementById('level5-screen');
+                const mercyScreen = document.getElementById('mercy-screen');
+
+                lockScreen.classList.remove('hidden');
+                adminArea.classList.add('hidden'); 
+                mercyScreen.classList.add('hidden');
+                checkbox.checked = false; 
+
+                lockTitle.classList.remove('hidden');
+                lockMessage.classList.remove('hidden');
+                lockSubmessage.classList.remove('hidden');
+                lockImg.classList.remove('hidden');
+                hackerScreen.classList.add('hidden');
+                contractScreen.classList.add('hidden');
+                level5Screen.classList.add('hidden');
+                
+                document.getElementById('student-password-guess').classList.remove('hidden');
+                document.getElementById('btn-hack-botas').classList.remove('hidden');
+                document.getElementById('divine-message-container').classList.add('hidden');
+                
+                const btnGiveUp = document.getElementById('btn-give-up');
+                btnGiveUp.classList.remove('hidden');
+                btnGiveUp.innerText = "🏳️ Desistir e Entregar Prova";
+                btnGiveUp.style.padding = "12px 20px";
+                btnGiveUp.style.fontSize = "18px";
+
+                document.getElementById('level5-reaction-gif').classList.add('hidden');
+                document.getElementById('level5-reaction-text').classList.add('hidden');
+
+                lockMessage.style.color = "white";
+                lockMessage.style.fontWeight = "normal";
+
+                resetHackerScreen();
+
+                if (infractions === 1) {
+                    lockImg.src = "botas.gif"; 
+                    lockImg.style.width = ""; lockImg.style.maxWidth = ""; lockImg.style.height = ""; lockImg.style.objectFit = "";
+                    lockScreen.style.background = "rgba(200, 0, 0, 0.95)"; lockScreen.style.backgroundImage = "none";
+                    lockTitle.innerText = "PROVA BLOQUEADA E QUESTÃO ANULADA!";
+                    lockMessage.innerText = "Saiu da aba ou tentou abrir outra janela.";
+                    lockSubmessage.innerText = "Admita que errou selecionando abaixo, e se quebrar a senha tirou 10 na prova. Caso contrário, chame o BOTAS.";
+                    confessionArea.classList.remove('hidden');
+                    btnFujao.classList.add('hidden');
+                    
+                } else if (infractions === 2) {
+                    lockImg.src = "botas1.gif";
+                    lockImg.style.width = "90vw"; lockImg.style.maxWidth = "1000px"; lockImg.style.height = "60vh"; lockImg.style.objectFit = "contain";
+                    lockScreen.style.backgroundImage = "linear-gradient(rgba(10, 10, 15, 0.75), rgba(10, 10, 15, 0.75)), url('gotham.jpg')";
+                    lockScreen.style.backgroundPosition = "center center"; lockScreen.style.backgroundRepeat = "no-repeat"; lockScreen.style.backgroundSize = "cover";
+                    lockTitle.innerText = "PROVA BLOQUEADA!";
+                    lockMessage.innerText = "Outra vez? O Batman vigia Gotham, e o BOTAS vigia as abas do navegador!";
+                    lockMessage.style.color = "#ffcc00"; lockMessage.style.fontWeight = "bold"; 
+                    lockSubmessage.innerText = ""; 
+                    confessionArea.classList.add('hidden');
+                    btnFujao.classList.remove('hidden');
+                    btnFujao.style.position = 'relative'; btnFujao.style.left = '0px'; btnFujao.style.top = '0px';
+
+                } else if (infractions === 3) {
+                    lockScreen.style.background = "#000"; lockScreen.style.backgroundImage = "none";
+                    lockTitle.classList.add('hidden'); lockMessage.classList.add('hidden'); lockSubmessage.classList.add('hidden'); lockImg.classList.add('hidden');
+                    confessionArea.classList.add('hidden'); btnFujao.classList.add('hidden');
+                    hackerScreen.classList.remove('hidden');
+                    const audio = document.getElementById('hacker-audio');
+                    if(audio) audio.play().catch(e => console.log("Áudio bloqueado."));
+                    runHackerProtocol();
+
+                } else if (infractions === 4) {
+                    lockScreen.style.background = "url('https://www.transparenttextures.com/patterns/dark-wood.png') rgba(15, 10, 5, 0.98)"; lockScreen.style.backgroundImage = "none"; 
+                    lockTitle.classList.add('hidden'); lockMessage.classList.add('hidden'); lockSubmessage.classList.add('hidden'); lockImg.classList.add('hidden');
+                    confessionArea.classList.add('hidden'); btnFujao.classList.add('hidden'); hackerScreen.classList.add('hidden');
+                    contractScreen.classList.remove('hidden');
+                    document.querySelectorAll('.clause-cb').forEach(cb => cb.checked = false);
+                    document.getElementById('contract-signature').value = "";
+
+                } else {
+                    lockScreen.style.background = "url('https://media.giphy.com/media/xT9IgzoKnwFNmISR8I/giphy.gif') center center / cover no-repeat";
+                    lockTitle.classList.add('hidden'); lockMessage.classList.add('hidden'); lockSubmessage.classList.add('hidden'); lockImg.classList.add('hidden');
+                    confessionArea.classList.add('hidden'); btnFujao.classList.add('hidden'); hackerScreen.classList.add('hidden'); contractScreen.classList.add('hidden'); adminArea.classList.add('hidden');
+                    level5Screen.classList.remove('hidden');
+                    document.getElementById('student-password-guess').value = "";
+                    studentAttemptsLeft = 3;
+                    document.getElementById('hacker-chances').innerText = `Tentativas restantes: ${studentAttemptsLeft}`;
+                }
+
+                document.getElementById('unlockPassword').value = "";
+            }
+        }
+
+        // ==========================================
+        // LISTENERS DE SEGURANÇA (ABAS E JANELAS)
+        // ==========================================
+        // Monitora quando a aba fica invisível
+        document.addEventListener("visibilitychange", () => {
+            if (document.hidden) applyAntiCheatPenalty();
+        });
+
+        // Monitora qualquer perda de foco da janela (incluindo cliques com abas lado a lado)
+        window.addEventListener("blur", () => {
+            if (!ignoreBlur) {
+                applyAntiCheatPenalty();
+            }
+        });
+
+        document.getElementById('divine-checkbox').addEventListener('change', function() {
+            const btnGiveUp = document.getElementById('btn-give-up');
+            if (this.checked) {
+                btnGiveUp.classList.remove('hidden');
+            } else {
+                btnGiveUp.classList.add('hidden');
+            }
+        });
+
+        function guessPassword() {
+            let guess = document.getElementById('student-password-guess').value;
+            const reactionGif = document.getElementById('level5-reaction-gif');
+            const reactionText = document.getElementById('level5-reaction-text');
+            
+            let primeiroNome = studentName ? studentName.split(' ')[0] : "Mortal";
+            
+            if (guess === SENHA_PROFESSOR) {
+                isLocked = false; 
+                document.getElementById('lock-screen').classList.add('hidden');
+                document.getElementById('level5-screen').classList.add('hidden');
+                reactionGif.classList.add('hidden'); reactionText.classList.add('hidden');
+                
+                selectedAnswers.push({
+                    question: questions[currentQuestionIndex].question,
+                    selected: "ANULADA (Saiu da aba)",
+                    correct: questions[currentQuestionIndex].correctAnswer,
+                    isCorrect: false
+                });
+
+                currentQuestionIndex++;
+                if (currentQuestionIndex < questions.length) renderQuestion();
+                else finishQuiz();
+
+            } else {
+                studentAttemptsLeft--;
+                document.getElementById('hacker-chances').innerText = `Tentativas restantes: ${studentAttemptsLeft}`;
+                reactionGif.classList.remove('hidden'); reactionText.classList.remove('hidden');
+                
+                if (studentAttemptsLeft === 2) {
+                    reactionGif.src = "erro1.gif"; 
+                    reactionText.innerHTML = `ERROU, ${primeiroNome}! 🤣<br>Acha que a mente do Supremo Botas usa senhas de meros mortais?<br>Ajoelhe-se e tente de novo. Faltam 2 chances!`;
+                    document.getElementById('student-password-guess').value = ""; document.getElementById('student-password-guess').focus();
+
+                } else if (studentAttemptsLeft === 1) {
+                    reactionGif.src = "erro2.gif"; 
+                    reactionText.innerHTML = `ERROUUU DE NOVO! 🤦‍♂️<br>A sua insignificância perante a minha omnisciência é cómica.<br>Cuidado, ${primeiroNome}... É a sua ÚLTIMA CHANCE antes do fim!`;
+                    document.getElementById('student-password-guess').value = ""; document.getElementById('student-password-guess').focus();
+
+                } else {
+                    reactionGif.src = "erro3.gif"; 
+                    reactionText.innerHTML = `KABOOM! 💥 INACEITÁVEL!<br>A fúria do Botas caiu sobre si, ${primeiroNome}.<br>Sinta o peso da sua derrota.`;
+                    
+                    document.getElementById('student-password-guess').classList.add('hidden');
+                    document.getElementById('btn-hack-botas').classList.add('hidden');
+                    
+                    const divineContainer = document.getElementById('divine-message-container');
+                    const divineText = document.getElementById('divine-text');
+                    const divineCheckbox = document.getElementById('divine-checkbox');
+                    
+                    divineContainer.classList.remove('hidden');
+                    divineText.innerHTML = `Eu, <b>${primeiroNome}</b>, com o ego totalmente destruído e de joelhos virtuais, confesso que tentei enganar o omnipresente Deus da Informática e falhei miseravelmente. Marco esta caixa em sinal de extrema humilhação, entrego a prova do jeito que está e choro aceitando a nota trágica que mereço.`;
+                    divineCheckbox.checked = false;
+                    
+                    const btnGiveUp = document.getElementById('btn-give-up');
+                    btnGiveUp.classList.add('hidden');
+                    btnGiveUp.innerHTML = "🏳️ Assumo a minha derrota esmagadora e entrego a prova!";
+                    btnGiveUp.style.padding = "15px"; btnGiveUp.style.fontSize = "16px"; 
+                }
+            }
+        }
+
+        function giveUp() {
+            let primeiroNome = studentName ? studentName.split(' ')[0] : "Covarde";
+
+            if (studentAttemptsLeft > 0) {
+                if (studentAttemptsLeft === 3) {
+                    alert(`Achou que seria assim tão fácil fugir, ${primeiroNome}? O Supremo Botas não aceita rendição sem luta! Tem de tentar hackear!`);
+                } else if (studentAttemptsLeft === 2) {
+                    alert(`Ainda a tentar fugir? Patético. O sistema exige o seu sangue e suor! Hackeie a senha ou perca tudo!`);
+                } else if (studentAttemptsLeft === 1) {
+                    alert(`Não, não, não... Ninguém desiste no último segundo. O mestre Botas bloqueou a saída! Tente a senha!`);
+                }
+                return; 
+            }
+
+            showMercyScreen();
+        }
+
+        function showMercyScreen() {
+            document.getElementById('level5-screen').classList.add('hidden');
+            document.getElementById('mercy-screen').classList.remove('hidden');
+            document.getElementById('lock-screen').style.background = "#000";
+            document.getElementById('mercy-password').value = "";
+            document.getElementById('mercy-admin-area').classList.add('hidden');
+            document.getElementById('btn-beg').innerText = "🙏 Ó Supremo Botas, imploro pelo seu perdão!";
+            document.getElementById('btn-beg').disabled = false;
+            
+            const audio = document.getElementById('hacker-audio');
+            if (audio) { audio.pause(); audio.currentTime = 0; }
+        }
+
+        function begForMercy() {
+            document.getElementById('btn-beg').innerText = "🙏 A implorar pela presença divina...";
+            document.getElementById('btn-beg').disabled = true;
+            setTimeout(() => {
+                document.getElementById('mercy-admin-area').classList.remove('hidden');
+            }, 1500);
+        }
+
+        function grantMercy() {
+            let pass = document.getElementById('mercy-password').value;
+            if (pass === SENHA_PROFESSOR) {
+                document.getElementById('lock-screen').classList.add('hidden');
+                document.getElementById('mercy-screen').classList.add('hidden');
+                document.getElementById('mercy-password').value = "";
+                
+                document.getElementById('final-warning-screen').classList.remove('hidden');
+                
+                selectedAnswers.push({
+                    question: questions[currentQuestionIndex].question,
+                    selected: "ANULADA (Recebeu o Perdão do Botas)",
+                    correct: questions[currentQuestionIndex].correctAnswer,
+                    isCorrect: false
+                });
+                currentQuestionIndex++;
+                
+            } else {
+                alert("Apenas a divindade tem esta senha!");
+            }
+        }
+
+        function denyMercy() {
+            let pass = document.getElementById('mercy-password').value;
+            if (pass === SENHA_PROFESSOR) {
+                while(currentQuestionIndex < questions.length) {
+                    selectedAnswers.push({
+                        question: questions[currentQuestionIndex].question,
+                        selected: "DESISTIU (Perdão Negado pelo Botas)",
+                        correct: questions[currentQuestionIndex].correctAnswer,
+                        isCorrect: false
+                    });
+                    currentQuestionIndex++;
+                }
+                document.getElementById('lock-screen').classList.add('hidden');
+                finishQuiz();
+                document.getElementById('result-title').innerText = "💀 JULGAMENTO FINAL 💀";
+                document.getElementById('result-title').style.color = "#ff0000";
+                document.getElementById('result-msg').innerHTML = "<b>O Supremo Botas negou o seu perdão.</b><br>A sua prova foi encerrada e o restante foi zerado.";
+            } else {
+                alert("Senha incorreta!");
+            }
+        }
+
+        function acceptWarning() {
+            document.getElementById('final-warning-screen').classList.add('hidden');
+            isLastChanceMode = true;
+            isLocked = false;
+            
+            if (currentQuestionIndex < questions.length) {
+                renderQuestion();
+            } else {
+                finishQuiz();
+            }
+        }
+
+        document.getElementById('confession-checkbox').addEventListener('change', function() {
+            const adminArea = document.getElementById('admin-area');
+            if (this.checked && infractions === 1) adminArea.classList.remove('hidden');
+            else adminArea.classList.add('hidden');
+        });
+
+        function checkContract() {
+            const checkboxes = document.querySelectorAll('.clause-cb');
+            let allChecked = true;
+            checkboxes.forEach(cb => { if(!cb.checked) allChecked = false; });
+            const signature = document.getElementById('contract-signature').value;
+            const isSignatureCorrect = (signature === "Eu desisto, o Botas sempre vence.");
+            const adminArea = document.getElementById('admin-area');
+            if (allChecked && isSignatureCorrect && infractions === 4) { adminArea.classList.remove('hidden'); } 
+            else { adminArea.classList.add('hidden'); }
+        }
+
+        document.querySelectorAll('.clause-cb').forEach(cb => cb.addEventListener('change', checkContract));
+        document.getElementById('contract-signature').addEventListener('input', checkContract);
+
+        const btnFujao = document.getElementById('btn-fujao');
+        btnFujao.addEventListener('mouseover', function() {
+            this.style.position = 'absolute';
+            const windowWidth = window.innerWidth;
+            const windowHeight = window.innerHeight;
+            const btnWidth = this.offsetWidth;
+            const btnHeight = this.offsetHeight;
+            let randomX = Math.floor(Math.random() * (windowWidth - btnWidth));
+            let randomY = Math.floor(Math.random() * (windowHeight - btnHeight));
+            randomX = Math.max(10, randomX); randomY = Math.max(10, randomY);
+            this.style.left = randomX + 'px'; this.style.top = randomY + 'px';
+        });
+
+        function unlockQuiz() {
+            const pass = document.getElementById('unlockPassword').value;
+            if (pass === SENHA_PROFESSOR) {
+                isLocked = false; 
+                resetHackerScreen();
+                const audio = document.getElementById('hacker-audio');
+                if (audio) { audio.pause(); audio.currentTime = 0; }
+                document.getElementById('lock-screen').classList.add('hidden');
+                document.getElementById('admin-area').classList.add('hidden'); 
+                document.getElementById('unlockPassword').value = "";
+                selectedAnswers.push({
+                    question: questions[currentQuestionIndex].question,
+                    selected: "ANULADA (Saiu da aba)",
+                    correct: questions[currentQuestionIndex].correctAnswer,
+                    isCorrect: false
+                });
+                currentQuestionIndex++;
+                if (currentQuestionIndex < questions.length) renderQuestion();
+                else finishQuiz();
+            } else { alert("Senha incorreta!"); }
+        }
+
+        function shuffleArray(array) {
+            for (let i = array.length - 1; i > 0; i--) {
+                const j = Math.floor(Math.random() * (i + 1));
+                [array[i], array[j]] = [array[j], array[i]];
+            }
+            return array;
+        }
+
+        function startQuiz() {
+            const nameInput = document.getElementById('studentName').value.trim();
+            const emailInput = document.getElementById('studentEmail').value.trim();
+            if (!nameInput) { 
+                ignoreBlur = true;
+                alert("Por favor, digite o seu nome completo."); 
+                setTimeout(() => { ignoreBlur = false; }, 300);
+                return; 
+            }
+            if (!emailInput) { 
+                ignoreBlur = true;
+                alert("Por favor, digite o seu e-mail."); 
+                setTimeout(() => { ignoreBlur = false; }, 300);
+                return; 
+            }
+            if (!/^\S+@\S+\.\S+$/.test(emailInput)) { 
+                ignoreBlur = true;
+                alert("Por favor, digite um endereço de e-mail válido."); 
+                setTimeout(() => { ignoreBlur = false; }, 300);
+                return; 
+            }
+
+            studentName = nameInput; studentEmail = emailInput; isQuizActive = true;
+            questions = shuffleArray([...bancoDeQuestoes]);
+            questions.forEach(q => { q.options = shuffleArray([...q.options]); });
+
+            document.getElementById('screen-intro').classList.add('hidden');
+            document.getElementById('screen-quiz').classList.remove('hidden');
+            renderQuestion();
+        }
+
+        function renderQuestion() {
+            const q = questions[currentQuestionIndex];
+            document.getElementById('question-counter').innerText = `Questão ${currentQuestionIndex + 1} de ${questions.length}`;
+            document.getElementById('question-text').innerText = q.question;
+            const optionsArea = document.getElementById('options-area');
+            optionsArea.innerHTML = ""; 
+
+            q.options.forEach((opt, index) => {
+                const label = document.createElement('label');
+                label.className = 'option-label';
+                label.innerHTML = `<input type="radio" name="option" value="${opt}"> ${opt}`;
+                optionsArea.appendChild(label);
+            });
+
+            if (currentQuestionIndex === questions.length - 1) { document.getElementById('btn-next').innerText = "Finalizar Prova"; }
+        }
+
+        function nextQuestion() {
+            const selected = document.querySelector('input[name="option"]:checked');
+            if (!selected) { 
+                ignoreBlur = true; // Desliga o anti-cola
+                alert("Por favor, selecione uma alternativa."); 
+                setTimeout(() => { ignoreBlur = false; }, 300); // Religa o anti-cola 300ms após fechar o alerta
+                return; 
+            }
+
+            selectedAnswers.push({
+                question: questions[currentQuestionIndex].question,
+                selected: selected.value,
+                correct: questions[currentQuestionIndex].correctAnswer,
+                isCorrect: selected.value === questions[currentQuestionIndex].correctAnswer
+            });
+
+            currentQuestionIndex++;
+            if (currentQuestionIndex < questions.length) renderQuestion();
+            else finishQuiz();
+        }
+
+        function finishQuiz() {
+            isQuizActive = false; 
+            document.getElementById('screen-quiz').classList.add('hidden');
+            document.getElementById('screen-result').classList.remove('hidden');
+        }
+
+        function sendEmail() {
+            const btn = document.getElementById('btn-enviar');
+            btn.innerText = "A enviar, aguarde..."; btn.disabled = true;
+
+            let score = selectedAnswers.filter(ans => ans.isCorrect).length;
+            let relatorio = `Nome do Aluno: ${studentName}\n`;
+            relatorio += `E-mail do Aluno: ${studentEmail}\n`; 
+            
+            let statusPunicoes = isLastChanceMode ? "⚠️ ATIVO (Prova vale no máx 9.0)" : "Nenhuma extra";
+            relatorio += `Nota Final: ${score} de ${questions.length}\n`;
+            relatorio += `Punição do Último Aviso: ${statusPunicoes}\n`;
+            relatorio += `Tentativas de Copiar (Infrações): ${infractions}\n\n`;
+            relatorio += `--- DETALHAMENTO DAS RESPOSTAS ---\n`;
+            
+            selectedAnswers.forEach((ans, index) => {
+                let status = ans.isCorrect ? "✅ Acertou" : "❌ Errou";
+                relatorio += `\nQuestão ${index + 1}: ${ans.question}\n`;
+                relatorio += `Resposta do Aluno: ${ans.selected} (${status})\n`;
+                if(!ans.isCorrect) relatorio += `Resposta Correta: ${ans.correct}\n`;
+            });
+
+            fetch("https://formsubmit.co/ajax/pbotas@prof.educacao.sp.gov.br", {
+                method: "POST",
+                headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
+                body: JSON.stringify({
+                    _subject: `📝 Resultado: ${studentName} - Nota: ${score}`,
+                    Nome: studentName,
+                    Email: studentEmail,
+                    Nota: score, 
+                    Infracoes: infractions, 
+                    Relatorio: relatorio
+                })
+            })
+            .then(response => response.json())
+            .then(data => { 
+                ignoreBlur = true;
+                alert("Prova enviada com sucesso!"); 
+                setTimeout(() => { ignoreBlur = false; }, 300);
+                btn.innerText = "Prova Enviada ✅"; 
+            })
+            .catch(error => { 
+                ignoreBlur = true;
+                alert("Erro de conexão ao enviar. Se falhar, chame o professor."); 
+                setTimeout(() => { ignoreBlur = false; }, 300);
+                btn.innerText = "Tentar Enviar Novamente"; 
+                btn.disabled = false; 
+            });
+        }
+
+        function downloadCSV() {
+            ignoreBlur = true; 
+            let pass = prompt("🔒 ACESSO RESTRITO: Digite a senha do Botas para baixar o backup da prova:");
+            setTimeout(() => { ignoreBlur = false; }, 300);
+
+            if (pass !== SENHA_PROFESSOR) {
+                ignoreBlur = true;
+                alert("❌ Senha incorreta! Tentativa de acesso não autorizada bloqueada.");
+                setTimeout(() => { ignoreBlur = false; }, 300);
+                return;
+            }
+
+            let score = selectedAnswers.filter(ans => ans.isCorrect).length;
+            let csvContent = "data:text/csv;charset=utf-8,";
+            csvContent += "Nome do Aluno,E-mail,Nota Final,Punica Max 9,Tentativas de Colar\n";
+            csvContent += `"${studentName}","${studentEmail}",${score} de ${questions.length},${isLastChanceMode ? "SIM" : "NAO"},${infractions}\n\n`;
+            csvContent += "Questao,Resposta do Aluno,Resposta Correta,Status\n";
+
+            selectedAnswers.forEach(ans => {
+                let status = ans.isCorrect ? "Acertou" : "Errou";
+                let qText = ans.question.replace(/,/g, " ").replace(/"/g, "'");
+                let sText = ans.selected.replace(/,/g, " ");
+                let cText = ans.correct.replace(/,/g, " ");
+                csvContent += `"${qText}","${sText}","${cText}","${status}"\n`;
+            });
+
+            const encodedUri = encodeURI(csvContent);
+            const link = document.createElement("a");
+            link.setAttribute("href", encodedUri);
+            link.setAttribute("download", `Prova_${studentName.replace(/ /g,"_")}.csv`);
+            document.body.appendChild(link); link.click(); document.body.removeChild(link);
+        }
+
+        /* =========================================
+           BANCO DE QUESTÕES 
+        ========================================= */
+        const bancoDeQuestoes = [
+            {
+                question: "11. Em uma classe de 50 alunos, as notas foram organizadas da seguinte forma (Nota : Quantidade de alunos):\nNota 2: 1 aluno\nNota 3: 3 alunos\nNota 4: 6 alunos\nNota 5: 10 alunos\nNota 6: 13 alunos\nNota 7: 8 alunos\nNota 8: 5 alunos\nNota 9: 3 alunos\nNota 10: 1 aluno\n\nCom base nesse quadro, identifique, respectivamente:\na) A moda das notas.\nb) A amplitude das notas do conjunto de dados.",
+                options: ["6; 8", "13; 10", "5; 8", "6; 10"],
+                correctAnswer: "6; 8"
+            },
+            {
+                question: "12. Ao analisar um conjunto de dados, podemos usar diferentes medidas. Relacione o conceito à sua definição correta:\n\nI - Indica um valor que representa o conjunto de dados de forma equilibrada.\nII - Indica o valor que aparece com maior frequência no conjunto.\nIII - Indica a diferença entre o maior valor e o menor valor do conjunto.",
+                options: [
+                    "I - Média, II - Moda, III - Amplitude", 
+                    "I - Moda, II - Média, III - Amplitude", 
+                    "I - Amplitude, II - Moda, III - Média", 
+                    "I - Média, II - Amplitude, III - Moda"
+                ],
+                correctAnswer: "I - Média, II - Moda, III - Amplitude"
+            },
+            {
+                question: "13. O gráfico mostra a quantidade de sucos vendidos em uma lanchonete durante 7 dias:\nSegunda (10), Terça (8), Quarta (10), Quinta (7), Sexta (10), Sábado (11) e Domingo (7).\n\nCom base na análise dos dados, determine respectivamente:\na) Qual é a moda das quantidades vendidas?\nb) Qual é a média diária de sucos vendidos?\nc) Qual é a amplitude?",
+                options: [
+                    "10; 9; 4", 
+                    "7; 9; 5", 
+                    "10; 8; 4", 
+                    "11; 9; 3"
+                ],
+                correctAnswer: "10; 9; 4"
+            },
+            {
+                question: "14. Os salários dos 5 funcionários de uma pequena empresa são: R$ 1.500, R$ 1.500, R$ 1.800, R$ 2.000 e R$ 8.200. \n\nCalculando a média e a moda desses salários, obtemos respectivamente quais valores?",
+                options: [
+                    "R$ 3.000 e R$ 1.500", 
+                    "R$ 1.500 e R$ 1.500", 
+                    "R$ 3.000 e R$ 1.800", 
+                    "R$ 1.800 e R$ 2.000"
+                ],
+                correctAnswer: "R$ 3.000 e R$ 1.500"
+            },
+            {
+                question: "15. As idades dos titulares de uma equipe de futsal são: 22, 24, 26, 26 e 32 anos. Durante uma partida, o jogador de 32 anos sentiu um desconforto e foi substituído por um jovem de 22 anos. \n\nO que ocorreu com a média de idade da equipe em quadra após essa substituição?",
+                options: [
+                    "Diminuiu em 2 anos.", 
+                    "Aumentou em 2 anos.", 
+                    "Permaneceu a mesma.", 
+                    "Diminuiu em 4 anos."
+                ],
+                correctAnswer: "Diminuiu em 2 anos."
+            }
+        ];
+    </script>
+</body>
+</html>
