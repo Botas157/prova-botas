@@ -12,35 +12,41 @@
             color: #333;
             display: flex;
             justify-content: center;
-            align-items: flex-start;
+            align-items: flex-start; /* Garante que itens grandes não tenham o topo cortado */
             min-height: 100vh;
             margin: 0;
-            padding: 15px;
+            padding: 20px 10px; /* Margem de segurança nas bordas */
             box-sizing: border-box;
             user-select: none; 
             -webkit-user-select: none;
             -moz-user-select: none;
-            overflow-x: hidden; 
-            overflow-y: auto;
+            overflow-y: auto; /* Habilita a barra de rolagem principal */
+            overflow-x: hidden;
         }
 
         .container {
             background: #fff;
-            padding: 30px 20px;
+            padding: clamp(15px, 4vw, 30px) clamp(15px, 3vw, 25px); /* Espaçamento responsivo */
             border-radius: 10px;
             box-shadow: 0 4px 10px rgba(0,0,0,0.1);
             width: 100%;
-            max-width: 600px;
+            max-width: 700px; /* Levemente mais largo para acomodar textos grandes */
             text-align: center;
             box-sizing: border-box;
-            margin: auto;
+            margin: auto; /* Centraliza a div verticalmente se houver espaço na tela */
+        }
+
+        #question-text {
+            font-size: clamp(16px, 4vw, 20px); /* Fonte responsiva que encolhe em celulares */
+            line-height: 1.5;
+            white-space: pre-wrap; /* Garante que as quebras de linha funcionem e o texto não vaze */
         }
 
         .hidden { display: none !important; }
 
         input[type="text"], input[type="email"], input[type="password"] {
             width: 100%;
-            max-width: 100%;
+            max-width: 90%;
             padding: 10px;
             margin: 10px 0;
             border: 1px solid #ccc;
@@ -54,12 +60,11 @@
             color: white;
             border: none;
             padding: 12px 20px;
-            font-size: 16px;
+            font-size: clamp(14px, 4vw, 16px);
             border-radius: 5px;
             cursor: pointer;
             margin-top: 15px;
             max-width: 100%;
-            width: 100%;
             box-sizing: border-box;
             transition: 0.2s;
         }
@@ -81,16 +86,14 @@
         }
 
         .option-label {
-            display: flex;
-            align-items: center;
+            display: block;
             background: #f9f9f9;
             padding: 15px;
             margin-bottom: 10px;
             border: 1px solid #ddd;
             border-radius: 5px;
             cursor: pointer;
-            word-wrap: break-word;
-            box-sizing: border-box;
+            word-wrap: break-word; /* Evita que respostas muito longas saiam do quadrado */
         }
 
         .option-label:hover { background: #eef; }
@@ -106,8 +109,7 @@
             flex-direction: column;
             justify-content: flex-start; 
             align-items: center;
-            overflow-x: hidden;
-            overflow-y: auto;
+            overflow-y: auto; 
             z-index: 9999;
             text-align: center;
             padding: 40px 20px;
@@ -123,7 +125,7 @@
         }
         
         #lock-message {
-            transition: all 0.3s ease; max-width: 900px; width: 100%;
+            transition: all 0.3s ease; max-width: 900px;
             text-shadow: 2px 2px 5px rgba(0,0,0,0.8);
             font-size: clamp(18px, 5vw, 38px); margin: 10px 0;
         }
@@ -142,13 +144,13 @@
         /* CHECKBOX DA CONFISSÃO (NÍVEL 1) */
         .confession-box {
             background: #fff; color: #333; padding: 15px; border-radius: 8px;
-            margin: 15px auto; max-width: 100%; width: 90%; border: 3px solid #ff0000; box-sizing: border-box;
+            margin: 15px 0; max-width: 90%; border: 3px solid #ff0000; box-sizing: border-box;
         }
         .confession-box label {
             cursor: pointer; font-size: clamp(14px, 4vw, 18px);
-            font-weight: bold; display: flex; align-items: flex-start; text-align: left;
+            font-weight: bold; display: flex; align-items: center; text-align: left;
         }
-        .confession-box input { width: 25px; height: 25px; margin-right: 15px; cursor: pointer; flex-shrink: 0; margin-top: 2px; }
+        .confession-box input { width: 25px; height: 25px; margin-right: 15px; cursor: pointer; flex-shrink: 0; }
 
         /* BOTÃO FUJÃO (NÍVEL 2) */
         #btn-fujao {
@@ -160,10 +162,10 @@
         /* PROTOCOLO HACKER (NÍVEL 3) */
         #hacker-screen {
             font-family: "Courier New", Courier, monospace; color: #00ff00;
-            font-size: clamp(12px, 3.5vw, 22px); text-align: left; width: 100%; max-width: 800px;
+            font-size: clamp(12px, 3.5vw, 22px); text-align: left; width: 95%; max-width: 800px;
             line-height: 1.5; text-shadow: 0 0 10px rgba(0, 255, 0, 0.7);
             display: flex; flex-direction: column; gap: 15px; align-items: center;
-            padding: 10px; margin-bottom: 20px; box-sizing: border-box;
+            padding: 10px; margin-bottom: 20px;
         }
         .hacker-line { margin: 0; width: 100%; display: flex; flex-direction: column; }
         .hacker-text-wrapper { display: flex; align-items: center; word-break: break-word; }
@@ -184,12 +186,12 @@
         #btn-cancel-send {
             background-color: #ff3333; color: white; font-weight: bold; font-size: clamp(14px, 3.5vw, 20px);
             padding: 12px 25px; border: 3px solid #fff; border-radius: 8px; cursor: pointer;
-            box-shadow: 0 0 15px #ff0000; margin-top: 15px; animation: pulseBtn 0.8s infinite alternate; width: 100%;
+            box-shadow: 0 0 15px #ff0000; margin-top: 15px; animation: pulseBtn 0.8s infinite alternate;
         }
         @keyframes pulseBtn { from { transform: scale(1); box-shadow: 0 0 10px #ff0000; } to { transform: scale(1.05); box-shadow: 0 0 25px #ff3333; } }
 
         #final-gif-container { position: relative; width: 100%; margin-top: 20px; display: flex; justify-content: center; align-items: center; }
-        #final-gif-container img { max-width: 100%; width: 400px; border-radius: 15px; box-shadow: 0 0 25px #00ff00; z-index: 10; position: relative; }
+        #final-gif-container img { max-width: 400px; width: 100%; border-radius: 15px; box-shadow: 0 0 25px #00ff00; z-index: 10; position: relative; }
         
         .star-effect {
             position: absolute; top: 50%; left: 50%; margin-top: -12.5px; margin-left: -12.5px;
@@ -204,9 +206,9 @@
         }
 
         /* CONTRATO DE HUMILHAÇÃO (NÍVEL 4) */
-        #contract-screen { width: 100%; max-width: 700px; color: #333; animation: fadeIn 1s ease-in-out; margin-bottom: 20px;}
+        #contract-screen { width: 95%; max-width: 700px; color: #333; animation: fadeIn 1s ease-in-out; margin-bottom: 20px;}
         @keyframes fadeIn { from { opacity: 0; transform: scale(0.9); } to { opacity: 1; transform: scale(1); } }
-        .contract-box { background-color: #fdf5e6; border: 5px solid #8b4513; padding: 25px; border-radius: 10px; text-align: left; box-shadow: 0 0 30px rgba(0,0,0,0.9); box-sizing: border-box; width: 100%; }
+        .contract-box { background-color: #fdf5e6; border: 5px solid #8b4513; padding: 25px; border-radius: 10px; text-align: left; box-shadow: 0 0 30px rgba(0,0,0,0.9); }
         .contract-box h2 { text-align: center; color: #cc0000; text-transform: uppercase; font-size: clamp(20px, 5vw, 28px); margin-top: 0; border-bottom: 2px solid #8b4513; padding-bottom: 10px; }
         .contract-box label { display: flex; align-items: flex-start; margin: 15px 0; font-size: clamp(14px, 3.5vw, 18px); font-weight: bold; cursor: pointer; color: #222; }
         .contract-box input[type="checkbox"] { width: 22px; height: 22px; margin-right: 15px; margin-top: 2px; cursor: pointer; flex-shrink: 0; }
@@ -218,16 +220,16 @@
         #level5-screen {
             background: rgba(10, 10, 10, 0.95);
             padding: 40px 20px; border-radius: 15px; border: 2px solid #00ff00; box-shadow: 0 0 30px #00ff00;
-            max-width: 600px; width: 100%; color: #fff; margin: auto; box-sizing: border-box;
+            max-width: 600px; width: 90%; color: #fff; margin-bottom: 20px;
         }
-        #level5-screen h2 { color: #00ff00; font-size: 32px; text-transform: uppercase; text-shadow: 0 0 10px #00ff00; margin-top: 0;}
-        #level5-screen p { font-size: 18px; line-height: 1.5; margin-bottom: 20px;}
-        #level5-screen input { background: #222; color: #00ff00; font-family: monospace; border: 1px solid #00ff00; font-size: 20px; padding: 15px; text-align: center; width: 100%; margin-bottom: 20px; box-sizing: border-box; }
-        #level5-screen button { font-size: 20px; width: 100%; margin-bottom: 10px; }
-        #level5-reaction-gif { max-width: 100%; width: 200px; border-radius: 10px; box-shadow: 0 0 20px #ff0000; margin: 10px auto; display: block; }
+        #level5-screen h2 { color: #00ff00; font-size: clamp(24px, 6vw, 32px); text-transform: uppercase; text-shadow: 0 0 10px #00ff00; margin-top: 0;}
+        #level5-screen p { font-size: clamp(14px, 4vw, 18px); line-height: 1.5; margin-bottom: 20px;}
+        #level5-screen input { background: #222; color: #00ff00; font-family: monospace; border: 1px solid #00ff00; font-size: 20px; padding: 15px; text-align: center; width: 100%; margin-bottom: 20px; }
+        #level5-screen button { font-size: clamp(16px, 4vw, 20px); width: 100%; margin-bottom: 10px; }
+        #level5-reaction-gif { max-width: 200px; border-radius: 10px; box-shadow: 0 0 20px #ff0000; margin: 10px auto; display: block; }
         #level5-reaction-text { color: #ff3333; font-weight: bold; font-size: 18px; white-space: pre-line; text-shadow: 0 0 5px #ff0000; margin-bottom: 15px; }
         
-        #divine-message-container { border: 2px dashed #00ff00; padding: 15px; margin-bottom: 15px; background: rgba(0,255,0,0.1); border-radius: 10px; text-shadow: 0 0 5px #00ff00; box-sizing: border-box; }
+        #divine-message-container { border: 2px dashed #00ff00; padding: 15px; margin-bottom: 15px; background: rgba(0,255,0,0.1); border-radius: 10px; text-shadow: 0 0 5px #00ff00; }
         #divine-message-container label { display: flex; align-items: flex-start; cursor: pointer; color: #fff; font-size: 16px; text-align: left; }
         #divine-message-container input { width: 25px; height: 25px; margin-right: 15px; margin-top: 0; flex-shrink: 0; }
 
@@ -235,30 +237,27 @@
         #mercy-screen {
             background: rgba(15, 10, 5, 0.98); padding: 40px 20px; border-radius: 15px; 
             border: 3px solid #ffcc00; box-shadow: 0 0 40px #ffcc00;
-            max-width: 650px; width: 100%; color: #fff; margin: auto; box-sizing: border-box;
+            max-width: 650px; width: 90%; color: #fff; margin-bottom: 20px;
             animation: fadeIn 1s ease-in-out;
         }
-        #mercy-screen h2 { color: #ffcc00; font-size: 32px; text-transform: uppercase; text-shadow: 0 0 10px #ffcc00; margin-top: 0;}
-        #mercy-screen p { font-size: 18px; line-height: 1.5; margin-bottom: 20px; }
+        #mercy-screen h2 { color: #ffcc00; font-size: clamp(24px, 6vw, 32px); text-transform: uppercase; text-shadow: 0 0 10px #ffcc00; margin-top: 0;}
+        #mercy-screen p { font-size: clamp(14px, 4vw, 18px); line-height: 1.5; margin-bottom: 20px; }
 
         /* TELA DE AVISO FINAL GIGANTE (Morte Súbita) */
         #final-warning-screen {
             position: fixed; top: 0; left: 0; width: 100%; height: 100%;
             background-color: rgba(220, 0, 0, 0.98); color: white;
-            display: flex; flex-direction: column; justify-content: flex-start; align-items: center;
-            z-index: 999999; text-align: center; padding: 40px 20px; box-sizing: border-box; overflow-y: auto; overflow-x: hidden;
+            display: flex; flex-direction: column; justify-content: center; align-items: center;
+            z-index: 999999; text-align: center; padding: 20px; box-sizing: border-box;
+            overflow-y: auto;
         }
-        
-        #final-warning-screen::before, #final-warning-screen::after { content: ''; margin: auto; }
 
         /* ÁREA DA SENHA DO PROFESSOR PADRÃO */
         #admin-area {
             position: relative; z-index: 100001; margin-top: 30px; margin-bottom: 30px;
             background: rgba(0, 0, 0, 0.95); padding: 20px 25px; border-radius: 8px;
             border: 3px dashed #ffcc00; display: inline-block; box-shadow: 0 0 20px rgba(0,0,0,0.8);
-            width: 100%; max-width: 400px; box-sizing: border-box;
         }
-
     </style>
 </head>
 <body oncontextmenu="return false;">
@@ -273,10 +272,10 @@
             O Supremo Botas lhe concedeu uma chance divina. Você continuará a prova de onde parou.<br>
             Mas preste muita atenção: SE VOCÊ SAIR DESTA ABA MAIS UMA ÚNICA VEZ...
         </p>
-        <p style="font-size: clamp(18px, 4.5vw, 28px); color: #ffcc00; text-shadow: 2px 2px 0 #000; font-weight: bold; background: rgba(0,0,0,0.5); padding: 15px; border-radius: 10px; margin-top: 10px; width: 100%; box-sizing: border-box;">
+        <p style="font-size: clamp(18px, 4.5vw, 28px); color: #ffcc00; text-shadow: 2px 2px 0 #000; font-weight: bold; background: rgba(0,0,0,0.5); padding: 15px; border-radius: 10px; margin-top: 10px;">
             A PROVA SERÁ ENTREGUE IMEDIATAMENTE E TODAS AS QUESTÕES RESTANTES SERÃO ZERADAS SEM AVISO!
         </p>
-        <button onclick="acceptWarning()" style="background: #000; color: #fff; font-size: clamp(16px, 4vw, 24px); font-weight: bold; padding: 20px; border: 4px solid #ffcc00; border-radius: 10px; cursor: pointer; margin-top: 30px; box-shadow: 0 0 20px #ffcc00; transition: 0.2s; width: 100%; max-width: 600px; box-sizing: border-box;">
+        <button onclick="acceptWarning()" style="background: #000; color: #fff; font-size: clamp(16px, 4vw, 24px); font-weight: bold; padding: 20px 30px; border: 4px solid #ffcc00; border-radius: 10px; cursor: pointer; margin-top: 30px; box-shadow: 0 0 20px #ffcc00; transition: 0.2s;">
             EU ENTENDI, O BOTAS MANDA E EU OBEDEÇO! NÃO VOU MAIS COLAR!
         </button>
     </div>
@@ -378,7 +377,7 @@
             
             <button id="btn-beg" onclick="begForMercy()" style="background-color: #ff9900; color: black; font-weight: bold; padding: 20px; font-size: 20px; width: 100%; border: 3px solid #fff; border-radius: 10px;">🙏 Ó Supremo Botas, imploro pelo seu perdão!</button>
             
-            <div id="mercy-admin-area" class="hidden" style="margin-top: 30px; border: 2px dashed #00ff00; padding: 20px; background: rgba(0,0,0,0.8); border-radius: 10px; width: 100%; box-sizing: border-box;">
+            <div id="mercy-admin-area" class="hidden" style="margin-top: 30px; border: 2px dashed #00ff00; padding: 20px; background: rgba(0,0,0,0.8); border-radius: 10px;">
                 <p style="color: #00ff00; margin-top: 0; font-weight: bold; font-size: 18px;">Acesso Exclusivo da Divindade (Botas)</p>
                 <input type="password" id="mercy-password" placeholder="Senha do Mestre..." style="font-size: 18px; padding: 12px;">
                 <br>
@@ -1064,7 +1063,7 @@
                 method: "POST",
                 headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
                 body: JSON.stringify({
-                    _subject: `📝 Resultado: ${studentName} - Nota: ${score}`,
+                    _subject: `📝 Resultado: ${studentName}Nota: ${score}`,
                     Nome: studentName,
                     Email: studentEmail,
                     Nota: score, 
@@ -1081,25 +1080,15 @@
             })
             .catch(error => { 
                 ignoreBlur = true;
-                alert("Erro de conexão ao enviar. Se falhar, chame o professor."); 
+                alert("Erro de conexão ao enviar. A folha de cálculo será descarregada por segurança."); 
                 setTimeout(() => { ignoreBlur = false; }, 300);
+                downloadCSV(); 
                 btn.innerText = "Tentar Enviar Novamente"; 
                 btn.disabled = false; 
             });
         }
 
         function downloadCSV() {
-            ignoreBlur = true; 
-            let pass = prompt("🔒 ACESSO RESTRITO: Digite a senha do Botas para baixar o backup da prova:");
-            setTimeout(() => { ignoreBlur = false; }, 300);
-
-            if (pass !== SENHA_PROFESSOR) {
-                ignoreBlur = true;
-                alert("❌ Senha incorreta! Tentativa de acesso não autorizada bloqueada.");
-                setTimeout(() => { ignoreBlur = false; }, 300);
-                return;
-            }
-
             let score = selectedAnswers.filter(ans => ans.isCorrect).length;
             let csvContent = "data:text/csv;charset=utf-8,";
             csvContent += "Nome do Aluno,E-mail,Nota Final,Punica Max 9,Tentativas de Colar\n";
@@ -1125,6 +1114,61 @@
            BANCO DE QUESTÕES 
         ========================================= */
         const bancoDeQuestoes = [
+            {
+                question: "1. Os tempos de deslocamento em São Paulo são bastante variados. Suponha que, em uma turma da cidade de São Paulo, 10 estudantes registraram o tempo que levam para chegar à escola em minutos:\n12, 18, 20, 25, 30, 35, 40, 55, 65 e 70.\nSe todos os estudantes tivessem exatamente o mesmo tempo de deslocamento, qual seria um valor aproximado?",
+                options: ["32 minutos", "35 minutos", "37 minutos", "40 minutos"],
+                correctAnswer: "37 minutos"
+            },
+            {
+                question: "2. O relatório semanal de uso do celular de Carol indica as seguintes horas de uso:\nDomingo (8,5h), \nSegunda (5,5h), \nTerça (6,0h), \nQuarta (6,5h), \nQuinta (4,5h), \nSexta (6,5h) \nSábado (8,0h).\nNaquela semana, Carol utilizou o celular, em média, durante quanto tempo?",
+                options: ["5,5 horas", "6,0 horas", "6,5 horas", "7,0 horas"],
+                correctAnswer: "6,5 horas"
+            },
+            {
+                question: "3. Em uma atividade de Ciências, um grupo mediu a altura (em cm) de 8 mudas após algumas semanas: \n14, 16, 16, 18, 19, 20, 20, 22.\nQuais são, respectivamente, as modas, a média e a amplitude desse conjunto?",
+                options: ["16 e 20; 18,125; 8", "16; 18; 8", "20; 18,5; 10", "16 e 20; 18; 10"],
+                correctAnswer: "16 e 20; 18,125; 8"
+            },
+            {
+                question: "4. Jorge pesquisou o preço de um mesmo ventilador em 7 lojas. Os valores, em reais, foram: \n120, 130, 120, 150, 160, 120, 180.\nQuais são, respectivamente, a moda, a média e a amplitude dos preços?",
+                options: ["130; 140; 50", "120; 140; 60", "120; 135; 60", "150; 140; 60"],
+                correctAnswer: "120; 140; 60"
+            },
+            {
+                question: "5. A nota final de um estudante é a média aritmética de cinco atividades. Um aluno obteve média final igual a 8,0. Na última atividade, tirou 9. \nNas três primeiras atividades obteve a mesma nota 'x', e na quarta obteve 'x + 3'.\nQual foi a nota desse aluno na primeira atividade?",
+                options: ["6,5", "7,0", "7,5", "8,0"],
+                correctAnswer: "7,0"
+            },
+            {
+                question: "6. Uma sala de 20 alunos realizou uma prova de Matemática. A nota média da turma foi 6. Sabe-se que a média das cinco piores notas foi 3. \nQual foi a média das notas do restante da turma (15 alunos)?",
+                options: ["6,5", "7,0", "7,5", "8,0"],
+                correctAnswer: "7,0"
+            },
+            {
+                question: "7. Nos 4 primeiros meses de um ano, o preço médio do quilo da banana num supermercado foi R$ 5,00. Sabendo que o preço médio no ano todo (12 meses) foi R$ 6,00, qual foi o preço médio nos últimos 8 meses daquele ano?",
+                options: ["R$ 5,50", "R$ 6,00", "R$ 6,50", "R$ 7,00"],
+                correctAnswer: "R$ 6,50"
+            },
+            {
+                question: "8. Em uma turma, as 5 maiores notas têm média 8,5. Apenas duas notas têm o mesmo valor 'x', e a média das outras três notas é 7,9. Qual é o valor da nota que se repete?",
+                options: ["9,0", "9,2", "9,4", "9,6"],
+                correctAnswer: "9,4"
+            },
+            {
+                question: "9. A média dos calçados de 20 jogadores é 41. Os números são: \n37, 44, 43, 42, 43, 39, 40, 42, 41, 40, 42, 42, 40, 41, 41, 44, 38, 39, 40, 42. \nSeja M a moda dos números. Se os jogadores com calçados menores que 40 forem substituídos por jogadores com calçado M, qual será a nova média?",
+                options: ["41,25", "41,50", "41,75", "42,00"],
+                correctAnswer: "41,75"
+            },
+            {
+                question: "10. Uma biblioteca escolar registrou a quantidade de livros emprestados na semana: Segunda (18), Terça (22), Quarta (15), Quinta (25) e Sexta (20). Com base nesses dados, responda respectivamente:\n\na) Qual dia teve a maior quantidade de livros emprestados?\nb) Qual dia teve a menor quantidade?\nc) Quantos livros a mais foram emprestados na terça-feira do que na sexta-feira?",
+                options: [
+                    "Quinta-feira; Quarta-feira; 2 livros", 
+                    "Quinta-feira; Segunda-feira; 4 livros", 
+                    "Terça-feira; Quarta-feira; 2 livros", 
+                    "Sexta-feira; Quarta-feira; 3 livros"
+                ],
+                correctAnswer: "Quinta-feira; Quarta-feira; 2 livros"
+            },
             {
                 question: "11. Em uma classe de 50 alunos, as notas foram organizadas da seguinte forma (Nota : Quantidade de alunos):\nNota 2: 1 aluno\nNota 3: 3 alunos\nNota 4: 6 alunos\nNota 5: 10 alunos\nNota 6: 13 alunos\nNota 7: 8 alunos\nNota 8: 5 alunos\nNota 9: 3 alunos\nNota 10: 1 aluno\n\nCom base nesse quadro, identifique, respectivamente:\na) A moda das notas.\nb) A amplitude das notas do conjunto de dados.",
                 options: ["6; 8", "13; 10", "5; 8", "6; 10"],
