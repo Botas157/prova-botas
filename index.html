@@ -1059,29 +1059,54 @@
                 if(!ans.isCorrect) relatorio += `Resposta Correta: ${ans.correct}\n`;
             });
 
-            fetch("https://formsubmit.co/ajax/botas.pauloricardo@gmail.com", {
+            // Envio 1: Web3Forms (Principal)
+            const reqWeb3 = fetch("https://api.web3forms.com/submit", {
                 method: "POST",
                 headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
                 body: JSON.stringify({
-                    _captcha: "false",
-                    _subject: `📝 Resultado: ${studentName}Nota: ${score}`,
+                    access_key: "c423927b-32f2-4e90-b304-df9774933922",
+                    subject: `📝 Resultado: ${studentName} - Nota: ${score}`,
+                    from_name: "Sistema Botas",
                     Nome: studentName,
                     Email: studentEmail,
                     Nota: score, 
                     Infracoes: infractions, 
                     Relatorio: relatorio
                 })
-            })
-            .then(response => response.json())
-            .then(data => { 
-                ignoreBlur = true;
-                alert("Prova enviada com sucesso!"); 
-                setTimeout(() => { ignoreBlur = false; }, 300);
-                btn.innerText = "Prova Enviada ✅"; 
+            });
+
+            // Envio 2: FormSubmit (Backup)
+            const reqFormSubmit = fetch("https://formsubmit.co/ajax/botas.pauloricardo@gmail.com", {
+                method: "POST",
+                headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
+                body: JSON.stringify({
+                    _captcha: "false",
+                    _subject: `📝 Resultado: ${studentName} - Nota: ${score}`,
+                    Nome: studentName,
+                    Email: studentEmail,
+                    Nota: score, 
+                    Infracoes: infractions, 
+                    Relatorio: relatorio
+                })
+            });
+
+            // Avalia se pelo menos um dos envios funcionou
+            Promise.allSettled([reqWeb3, reqFormSubmit])
+            .then(results => {
+                const sucesso = results.some(res => res.status === "fulfilled" && res.value.ok);
+                
+                if (sucesso) {
+                    ignoreBlur = true;
+                    alert("Prova enviada com sucesso!"); 
+                    setTimeout(() => { ignoreBlur = false; }, 300);
+                    btn.innerText = "Prova Enviada ✅"; 
+                } else {
+                    throw new Error("Falha nos dois servidores de e-mail");
+                }
             })
             .catch(error => { 
                 ignoreBlur = true;
-                alert("Erro de conexão ao enviar. A folha de cálculo será descarregada por segurança."); 
+                alert("Erro de conexão ao enviar. A cópia de segurança será descarregada."); 
                 setTimeout(() => { ignoreBlur = false; }, 300);
                 downloadCSV(); 
                 btn.innerText = "Tentar Enviar Novamente"; 
@@ -1090,6 +1115,17 @@
         }
 
         function downloadCSV() {
+            ignoreBlur = true; 
+            let pass = prompt("🔒 ACESSO RESTRITO: Digite a senha do Botas para baixar o backup da prova:");
+            setTimeout(() => { ignoreBlur = false; }, 300);
+
+            if (pass !== SENHA_PROFESSOR) {
+                ignoreBlur = true;
+                alert("❌ Senha incorreta! Tentativa de acesso não autorizada bloqueada.");
+                setTimeout(() => { ignoreBlur = false; }, 300);
+                return;
+            }
+
             let score = selectedAnswers.filter(ans => ans.isCorrect).length;
             let csvContent = "data:text/csv;charset=utf-8,";
             csvContent += "Nome do Aluno,E-mail,Nota Final,Punica Max 9,Tentativas de Colar\n";
