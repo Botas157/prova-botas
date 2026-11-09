@@ -294,7 +294,7 @@
 
     <!-- TELA 2: PROVA -->
     <div id="screen-quiz" class="container hidden">
-        <h3 id="question-counter">Questão 1 de 15</h3>
+        <h3 id="question-counter">Questão 1 de 10</h3>
         <h2 id="question-text" style="text-align: left;">Texto da Questão</h2>
         <div id="options-area" class="options-container"></div>
         <button id="btn-next" onclick="nextQuestion()">Próxima Questão</button>
@@ -986,7 +986,8 @@
             }
 
             studentName = nameInput; studentEmail = emailInput; isQuizActive = true;
-            questions = shuffleArray([...bancoDeQuestoes]);
+            // AQUI FOI FEITA A ALTERAÇÃO: Sorteia as questões e pega apenas as 10 primeiras
+            questions = shuffleArray([...bancoDeQuestoes]).slice(0, 10);
             questions.forEach(q => { q.options = shuffleArray([...q.options]); });
 
             document.getElementById('screen-intro').classList.add('hidden');
