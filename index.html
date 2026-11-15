@@ -434,7 +434,7 @@
                 e.preventDefault();
             }
 
-            if (e.ctrlKey && e.shiftKey && (e.key === 'b' || e.key === 'B')) {
+            if (e.ctrlKey && e.shiftKey && (e.key === 't' || e.key === 'T')) {
                 const lockScreen = document.getElementById('lock-screen');
                 if (!lockScreen.classList.contains('hidden') && infractions < 5) { 
                     document.getElementById('admin-area').classList.remove('hidden');
