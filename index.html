@@ -267,7 +267,7 @@
     <!-- TELA DE AVISO FINAL (MORTE SÚBITA APÓS O PERDÃO) -->
     <div id="final-warning-screen" class="hidden">
         <h1 style="font-size: clamp(35px, 8vw, 60px); margin-bottom: 10px; text-shadow: 3px 3px 0 #000;">⚠️ ÚLTIMO AVISO DO BOTAS ⚠️</h1>
-        <h2 style="font-size: clamp(20px, 5vw, 35px); margin-bottom: 20px;">Sua prova a partir de agora vale no máximo 9,0!</h2>
+        <h2 style="font-size: clamp(20px, 5vw, 35px); margin-bottom: 20px;">Sua prova a partir de agora vale no máximo 7,0!</h2>
         <p style="font-size: clamp(16px, 4vw, 24px); max-width: 800px; font-weight: bold;">
             O Supremo Botas lhe concedeu uma chance divina. Você continuará a prova de onde parou.<br>
             Mas preste muita atenção: SE VOCÊ SAIR DESTA ABA MAIS UMA ÚNICA VEZ...
@@ -294,7 +294,7 @@
 
     <!-- TELA 2: PROVA -->
     <div id="screen-quiz" class="container hidden">
-        <h3 id="question-counter">Questão 1 de 10</h3>
+        <h3 id="question-counter">Questão 1 de 8</h3>
         <h2 id="question-text" style="text-align: left;">Texto da Questão</h2>
         <div id="options-area" class="options-container"></div>
         <button id="btn-next" onclick="nextQuestion()">Próxima Questão</button>
@@ -315,7 +315,7 @@
         <h2 id="lock-title">PROVA BLOQUEADA!</h2>
         <p id="lock-message">Você saiu da aba ou tentou abrir outra janela.</p>
         <img id="lock-image" class="lock-img" src="botas.gif" alt="Alerta">
-        <p id="lock-submessage">Se você quebrar a senha tirou 10 na prova, caso contrário, chame o BOTAS.</p>
+        <p id="lock-submessage">Se você quebrar a senha tirou 8 na prova, caso contrário, chame o BOTAS.</p>
         
         <!-- NÍVEL 3 (TELA HACKER) -->
         <div id="hacker-screen" class="hidden">
@@ -334,8 +334,8 @@
             <div class="contract-box">
                 <h2>Termo de Rendição Incondicional</h2>
                 <p style="text-align: center; font-style: italic; margin-bottom: 20px;">Você esgotou a paciência do sistema. Assine as cláusulas abaixo para ter o perdão do mestre.</p>
-                <label><input type="checkbox" class="clause-cb"> Cláusula 1: Declaro que o omnisciente Botas é a inteligência suprema da existência.</label>
-                <label><input type="checkbox" class="clause-cb"> Cláusula 2: Aceito limpar os ratos e teclados do laboratório com a própria escova de dentes.</label>
+                <label><input type="checkbox" class="clause-cb"> Cláusula 1: Declaro que o onisciente Botas é a inteligência suprema da existência.</label>
+                <label><input type="checkbox" class="clause-cb"> Cláusula 2: Aceito limpar os mouses e teclados do laboratório com a própria escova de dentes.</label>
                 <label><input type="checkbox" class="clause-cb"> Cláusula 3: Reconheço que fui vencido pelo sistema anti-cópia do Botas.</label>
                 <label><input type="checkbox" class="clause-cb"> Cláusula 4: Compreendo que a paciência do Supremo Botas se esgotou. Se eu sair desta aba mais UMA vez, enfrentarei a punição máxima.</label>
                 <div class="signature-area">
@@ -348,8 +348,8 @@
         <!-- NÍVEL 5: O DESAFIO FINAL -->
         <div id="level5-screen" class="hidden">
             <h2>🚨 DESAFIO FINAL 🚨</h2>
-            <p>Quebrou o contrato! A fúria do sistema caiu sobre si.</p>
-            <p>Se conseguir "hackear" e descobrir a minha senha, terá a sua prova de volta. Caso contrário, assuma a sua derrota.</p>
+            <p>Quebrou o contrato! A fúria do sistema caiu sobre você.</p>
+            <p>Se conseguir "hackear" e descobrir a minha senha, terá sua prova de volta. Caso contrário, assuma sua derrota.</p>
             <p id="hacker-chances" style="color: #ffcc00; font-weight: bold; font-size: 22px;">Tentativas restantes: 3</p>
             
             <img id="level5-reaction-gif" src="" class="hidden">
@@ -359,7 +359,7 @@
             <button id="btn-hack-botas" onclick="guessPassword()" style="background-color: #28a745;">🔓 Hackear o Botas</button>
             
             <div id="divine-message-container" class="hidden">
-                <p style="color: #00ff00; font-size: 18px; font-weight: bold; margin-top: 0; margin-bottom: 15px;">Por eu, Botas, ser um ser bondoso, omnisciente, omnipresente e omnipotente, aceito que você é um mero mortal.</p>
+                <p style="color: #00ff00; font-size: 18px; font-weight: bold; margin-top: 0; margin-bottom: 15px;">Por eu, Botas, ser um ser bondoso, onisciente, onipresente e onipotente, aceito que você é um mero mortal.</p>
                 <label>
                     <input type="checkbox" id="divine-checkbox">
                     <span id="divine-text"></span>
@@ -381,7 +381,7 @@
                 <p style="color: #00ff00; margin-top: 0; font-weight: bold; font-size: 18px;">Acesso Exclusivo da Divindade (Botas)</p>
                 <input type="password" id="mercy-password" placeholder="Senha do Mestre..." style="font-size: 18px; padding: 12px;">
                 <br>
-                <button onclick="grantMercy()" style="background-color: #28a745; width: 100%; font-size: 18px; margin-bottom: 10px; font-weight: bold;">✨ Conceder Perdão (Nota Máx. 9)</button>
+                <button onclick="grantMercy()" style="background-color: #28a745; width: 100%; font-size: 18px; margin-bottom: 10px; font-weight: bold;">✨ Conceder Perdão (Nota Máx. 7)</button>
                 <button onclick="denyMercy()" style="background-color: #8b0000; width: 100%; font-size: 18px; font-weight: bold;">💀 Negar Perdão (Zerar o Restante)</button>
             </div>
         </div>
@@ -459,10 +459,10 @@
             const steps = [
                 { text: "Iniciando Protocolo de Defesa Botas...", hasBar: false },
                 { text: "Você fez de novo, não conhece o SUPREMO BOTAS...", hasBar: false },
-                { text: "Acedendo ao sistema e cruzando dados...", hasBar: true },
+                { text: "Acessando o sistema e cruzando dados...", hasBar: true },
                 { text: "Apagando as suas contas pessoais...", hasBar: true },
                 { text: "Bloqueando acesso ao TikTok, Instagram e outras redes...", hasBar: true },
-                { text: "Preparando envio do histórico de navegação anónima para os pais...", hasBar: false, isFinal: true }
+                { text: "Preparando envio do histórico de navegação anônima para os pais...", hasBar: false, isFinal: true }
             ];
 
             for (let i = 0; i < steps.length; i++) {
@@ -575,7 +575,7 @@
             document.getElementById('progress-bar').style.width = currentProgressPercent + "%";
             document.getElementById('progress-text').innerText = Math.floor(currentProgressPercent) + "%";
 
-            if (currentProgressPercent >= 90) { alert("⚠️ AVISO DO SISTEMA: Tentativa de cancelamento detetada! O envio está quase completo. Digite uma senha de resgate agora para tentar abortar!"); }
+            if (currentProgressPercent >= 90) { alert("⚠️ AVISO DO SISTEMA: Tentativa de cancelamento detectada! O envio está quase completo. Digite uma senha de resgate agora para tentar abortar!"); }
         }
 
         function resetHackerScreen() {
@@ -586,7 +586,7 @@
             document.querySelectorAll('.star-effect').forEach(e => e.remove());
             
             const warning = document.getElementById('hacker-warning');
-            warning.innerText = "⚠️ CHAME O BOTAS PARA O SALVAR ANTES DE O ENVIO SER CONCLUÍDO! ⚠️";
+            warning.innerText = "⚠️ CHAME O BOTAS PARA TE SALVAR ANTES DE O ENVIO SER CONCLUÍDO! ⚠️";
             warning.style.color = "#ff3333";
             warning.style.textShadow = "0 0 10px rgba(255, 0, 0, 0.8)";
         }
@@ -672,7 +672,7 @@
                     lockScreen.style.background = "rgba(200, 0, 0, 0.95)"; lockScreen.style.backgroundImage = "none";
                     lockTitle.innerText = "PROVA BLOQUEADA E QUESTÃO ANULADA!";
                     lockMessage.innerText = "Saiu da aba ou tentou abrir outra janela.";
-                    lockSubmessage.innerText = "Admita que errou selecionando abaixo, e se quebrar a senha tirou 10 na prova. Caso contrário, chame o BOTAS.";
+                    lockSubmessage.innerText = "Admita que errou selecionando abaixo, e se quebrar a senha tirou 8 na prova. Caso contrário, chame o BOTAS.";
                     confessionArea.classList.remove('hidden');
                     btnFujao.classList.add('hidden');
                     
@@ -780,12 +780,12 @@
 
                 } else if (studentAttemptsLeft === 1) {
                     reactionGif.src = "erro2.gif"; 
-                    reactionText.innerHTML = `ERROUUU DE NOVO! 🤦‍♂️<br>A sua insignificância perante a minha omnisciência é cómica.<br>Cuidado, ${primeiroNome}... É a sua ÚLTIMA CHANCE antes do fim!`;
+                    reactionText.innerHTML = `ERROUUU DE NOVO! 🤦‍♂️<br>A sua insignificância perante a minha onisciência é cômica.<br>Cuidado, ${primeiroNome}... É a sua ÚLTIMA CHANCE antes do fim!`;
                     document.getElementById('student-password-guess').value = ""; document.getElementById('student-password-guess').focus();
 
                 } else {
                     reactionGif.src = "erro3.gif"; 
-                    reactionText.innerHTML = `KABOOM! 💥 INACEITÁVEL!<br>A fúria do Botas caiu sobre si, ${primeiroNome}.<br>Sinta o peso da sua derrota.`;
+                    reactionText.innerHTML = `KABOOM! 💥 INACEITÁVEL!<br>A fúria do Botas caiu sobre você, ${primeiroNome}.<br>Sinta o peso da sua derrota.`;
                     
                     document.getElementById('student-password-guess').classList.add('hidden');
                     document.getElementById('btn-hack-botas').classList.add('hidden');
@@ -795,7 +795,7 @@
                     const divineCheckbox = document.getElementById('divine-checkbox');
                     
                     divineContainer.classList.remove('hidden');
-                    divineText.innerHTML = `Eu, <b>${primeiroNome}</b>, com o ego totalmente destruído e de joelhos virtuais, confesso que tentei enganar o omnipresente Deus da Informática e falhei miseravelmente. Marco esta caixa em sinal de extrema humilhação, entrego a prova do jeito que está e choro aceitando a nota trágica que mereço.`;
+                    divineText.innerHTML = `Eu, <b>${primeiroNome}</b>, com o ego totalmente destruído e de joelhos virtuais, confesso que tentei enganar o onipresente Deus da Informática e falhei miseravelmente. Marco esta caixa em sinal de extrema humilhação, entrego a prova do jeito que está e choro aceitando a nota trágica que mereço.`;
                     divineCheckbox.checked = false;
                     
                     const btnGiveUp = document.getElementById('btn-give-up');
@@ -837,7 +837,7 @@
         }
 
         function begForMercy() {
-            document.getElementById('btn-beg').innerText = "🙏 A implorar pela presença divina...";
+            document.getElementById('btn-beg').innerText = "🙏 Implorando pela presença divina...";
             document.getElementById('btn-beg').disabled = true;
             setTimeout(() => {
                 document.getElementById('mercy-admin-area').classList.remove('hidden');
@@ -986,8 +986,8 @@
             }
 
             studentName = nameInput; studentEmail = emailInput; isQuizActive = true;
-            // AQUI FOI FEITA A ALTERAÇÃO: Sorteia as questões e pega apenas as 10 primeiras
-            questions = shuffleArray([...bancoDeQuestoes]).slice(0, 10);
+            // Sorteia as questões e pega apenas as 8 primeiras
+            questions = shuffleArray([...bancoDeQuestoes]).slice(0, 8);
             questions.forEach(q => { q.options = shuffleArray([...q.options]); });
 
             document.getElementById('screen-intro').classList.add('hidden');
@@ -1041,13 +1041,13 @@
 
         function sendEmail() {
             const btn = document.getElementById('btn-enviar');
-            btn.innerText = "A enviar, aguarde..."; btn.disabled = true;
+            btn.innerText = "Enviando, aguarde..."; btn.disabled = true;
 
             let score = selectedAnswers.filter(ans => ans.isCorrect).length;
             let relatorio = `Nome do Aluno: ${studentName}\n`;
             relatorio += `E-mail do Aluno: ${studentEmail}\n`; 
             
-            let statusPunicoes = isLastChanceMode ? "⚠️ ATIVO (Prova vale no máx 9.0)" : "Nenhuma extra";
+            let statusPunicoes = isLastChanceMode ? "⚠️ ATIVO (Prova vale no máx 7.0)" : "Nenhuma extra";
             relatorio += `Nota Final: ${score} de ${questions.length}\n`;
             relatorio += `Punição do Último Aviso: ${statusPunicoes}\n`;
             relatorio += `Tentativas de Copiar (Infrações): ${infractions}\n\n`;
@@ -1107,7 +1107,7 @@
             })
             .catch(error => { 
                 ignoreBlur = true;
-                alert("Erro de conexão ao enviar. A cópia de segurança será descarregada."); 
+                alert("Erro de conexão ao enviar. A cópia de segurança será baixada."); 
                 setTimeout(() => { ignoreBlur = false; }, 300);
                 downloadCSV(); 
                 btn.innerText = "Tentar Enviar Novamente"; 
@@ -1129,7 +1129,7 @@
 
             let score = selectedAnswers.filter(ans => ans.isCorrect).length;
             let csvContent = "data:text/csv;charset=utf-8,";
-            csvContent += "Nome do Aluno,E-mail,Nota Final,Punica Max 9,Tentativas de Colar\n";
+            csvContent += "Nome do Aluno,E-mail,Nota Final,Punica Max 7,Tentativas de Colar\n";
             csvContent += `"${studentName}","${studentEmail}",${score} de ${questions.length},${isLastChanceMode ? "SIM" : "NAO"},${infractions}\n\n`;
             csvContent += "Questao,Resposta do Aluno,Resposta Correta,Status\n";
 
